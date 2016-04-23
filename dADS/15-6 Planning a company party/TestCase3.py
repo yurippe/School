@@ -25,7 +25,18 @@ def main():
     print "People invited: "
     print [n.name for n in invitedPeople]
 
+def time_test():
+    import timeit
 
+    def r():
+        root = Node("Max", 10000)
+        john = root.setLeft(Node("John", 1))
+        annie = john.setLeft(Node("Annie", 1))
+        jens = annie.setLeft(Node("Jens", 10000))
+
+        FindMaxRating(root)
+
+    return timeit.timeit(r, number=10000)
 
 if __name__ == "__main__":
     main()
