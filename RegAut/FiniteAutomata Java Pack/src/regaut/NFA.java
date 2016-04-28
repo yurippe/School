@@ -135,7 +135,12 @@ public class NFA implements Cloneable {
      * @param a automaton alphabet
      */
     public static NFA makeEmptyLanguage(Alphabet a) {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        NFA f = new NFA();
+        f.alphabet = a;
+        State s = new State();
+        f.states.add(s);
+        f.initial = s;
+        return f;
     }
 
     /**
@@ -143,8 +148,15 @@ public class NFA implements Cloneable {
      * @param a automaton alphabet
      */
     public static NFA makeEmptyString(Alphabet a) {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        NFA f = new NFA();
+        f.alphabet = a;
+        State s = new State();
+        f.states.add(s);
+        f.initial = s;
+        f.accept.add(s);
+        return f;
     }
+
 
     /**
      * Constructs a new NFA that accepts the language containing only the given singleton string. [Martin, Th. 3.25]
@@ -222,7 +234,12 @@ public class NFA implements Cloneable {
      * @exception IllegalArgumentException if <tt>c</tt> is not in the alphabet
      */
     public Set<State> delta(State q, char c) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        if (!alphabet.symbols.contains(c) && c!=LAMBDA)
+            throw new IllegalArgumentException("symbol '"+c+"' not in alphabet");
+        Set<State> set = transitions.get(new StateSymbolPair(q, c));
+        if (set==null)
+            set = new HashSet<State>();
+        return set;
     }
 
     /**
@@ -232,7 +249,18 @@ public class NFA implements Cloneable {
      * @return set of {@link State} objects (the input set is unmodified)
      */
     public Set<State> lambdaClosure(Set<State> set) {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        Set<State> res = new HashSet<State>(); // contains the states that are in the closure and have been visited
+        Set<State> pending = new HashSet<State>(); // contains the states that are in the closure but have not yet been visited
+        pending.addAll(set);
+        while (!pending.isEmpty()) {
+            State q = pending.iterator().next();
+            pending.remove(q);
+            res.add(q);
+            Set<State> s = new HashSet<State>(delta(q, LAMBDA));
+            s.removeAll(res);
+            pending.addAll(s);
+        }
+        return res;
     }
 
     /**
@@ -241,7 +269,16 @@ public class NFA implements Cloneable {
      * @exception IllegalArgumentException if a symbol in <tt>s</tt> is not in the alphabet
      */
     public Set<State> deltaStar(State q, String s) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        Set<State> set = new HashSet<State>();
+        set.add(q);
+        set = lambdaClosure(set);
+        for (char c : s.toCharArray()) {
+            Set<State> nset = new HashSet<State>();
+            for (State p : set)
+                nset.addAll(delta(p, c));
+            set = lambdaClosure(nset);
+        }
+        return set;
     }
 
     /**
@@ -251,7 +288,9 @@ public class NFA implements Cloneable {
      * @exception IllegalArgumentException if a symbol in <tt>s</tt> is not in the alphabet
      */
     public boolean accepts(String s) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        Set<State> set = deltaStar(initial, s);
+        set.retainAll(accept);
+        return !set.isEmpty();
     }
 
     /**
@@ -286,8 +325,23 @@ public class NFA implements Cloneable {
      * @exception IllegalArgumentException if the alphabets of <tt>f</tt> and this automaton are not the same
      */
     public NFA concat(NFA f) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        if (!alphabet.equals(f.alphabet))
+            throw new IllegalArgumentException("alphabets are different");
+        NFA f1 = (NFA) this.clone();
+        NFA f2 = (NFA) f.clone();
+        NFA n = new NFA();
+        n.alphabet = alphabet;
+        n.states.addAll(f1.states);
+        n.states.addAll(f2.states);
+        n.accept.addAll(f2.accept);
+        n.initial = f1.initial;
+        n.transitions.putAll(f1.transitions);
+        n.transitions.putAll(f2.transitions);
+        for (State s : f1.accept)
+            n.addLambda(s, f2.initial);
+        return n;
     }
+
 
     /**
      * Constructs a new automaton whose language is the Kleene star of the language of this automaton. [Martin, Th. 3.25]
@@ -304,8 +358,34 @@ public class NFA implements Cloneable {
      * The input automaton is unmodified.
      */
     public NFA removeLambdas() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        NFA f = new NFA();
+        f.alphabet = alphabet;
+        Map<State,State> m = new HashMap<State,State>(); // map from old states to new states
+        for (State p : states) {
+            State s = (State) p.clone();
+            f.states.add(s);
+            m.put(p, s);
+            if (accept.contains(p))
+                f.accept.add(s);
+        }
+        f.initial = m.get(initial);
+        Set<State> cl = new HashSet<State>();
+        cl.add(initial);
+        cl = lambdaClosure(cl);
+        cl.retainAll(accept);
+        if (!cl.isEmpty())
+            f.accept.add(f.initial);
+        for (State p : states) // this is quite naive but closely follows the mathematical definition in [Martin, Th. 3.17]
+            for (char c : alphabet.symbols) {
+                Set<State> set = deltaStar(p, Character.toString(c));
+                Set<State> nset = new HashSet<State>();
+                for (State q : set)
+                    nset.add(m.get(q));
+                f.transitions.put(new StateSymbolPair(m.get(p), c), nset);
+            }
+        return f;
     }
+
 
     /**
      * Determinizes this automaton by constructing an equivalent {@link FA}. [Martin, Th. 3.18]
@@ -315,6 +395,50 @@ public class NFA implements Cloneable {
      * <img src="http://cs.au.dk/~amoeller/RegAut/Lambda.gif" alt="Lambda"> transitions.
      */
     public FA determinize() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+
+        NFA in = (NFA) this.clone();
+        in.removeLambdas();
+        FA newFA = new FA(this.alphabet);
+
+        HashSet<HashSet<State>> Q1 = new HashSet<>(); //the states of the new FA (represented as sets
+
+
+
+
+
+        return newFA;
+
     }
+
+    private Set<Set<State>> getReachableStates(State start, Set<State> visited, Set<Set<State>> visitedSets){
+
+        for (Character letter : alphabet.symbols) {
+            Set<State> _delta = delta(start, letter);
+            visitedSets.add(_delta);
+        }
+
+        visited.add(start); //we are in this node
+        for (Character letter : alphabet.symbols) {
+            Set<State> nextSet = delta(start, letter);
+            for(State next : nextSet){
+                System.out.println(next.name);
+                if(!visited.contains(next)) {
+                    getReachableStates(next, visited, visitedSets);
+                }
+            }
+        }
+
+        return visitedSets;
+    }
+
+    public Set<Set<State>> getFAStates(){
+        Set<State> visited = new HashSet<>();
+        Set<Set<State>> visitedSets = new HashSet<>();
+        visited.add(this.initial);
+        Set<State> initialSet = new HashSet<>();
+        initialSet.add(this.initial);
+        visitedSets.add(initialSet);
+        return getReachableStates(this.initial, visited, visitedSets);
+    }
+
 }
