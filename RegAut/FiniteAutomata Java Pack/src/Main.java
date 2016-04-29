@@ -9,6 +9,48 @@ public class Main {
 
     public static void main(String[] args) {
 
+        Handin3NFAToFA();
+
+    }
+
+    public static void Handin3NFAToFA(){
+        NFA nfa = new NFA();
+        nfa.alphabet = new Alphabet("ab");
+        nfa.states = new HashSet<>();
+
+        State q1 = new State("1");
+        State q2 = new State("2");
+        State q3 = new State("3");
+        State q4 = new State("4");
+
+        nfa.states.add(q1);
+        nfa.states.add(q2);
+        nfa.states.add(q3);
+        nfa.states.add(q4);
+
+        nfa.accept = new HashSet<>();
+        nfa.accept.add(q2);
+
+        nfa.transitions = new HashMap<>();
+
+        nfa.transitions.put(new StateSymbolPair(q1, 'a'), new HashSet<>(Arrays.asList(q2, q3)));
+        nfa.transitions.put(new StateSymbolPair(q2, 'a'), new HashSet<>(Arrays.asList(q1)));
+        nfa.transitions.put(new StateSymbolPair(q3, 'b'), new HashSet<>(Arrays.asList(q4)));
+        nfa.transitions.put(new StateSymbolPair(q4, NFA.LAMBDA), new HashSet<>(Arrays.asList(q2)));
+        nfa.transitions.put(new StateSymbolPair(q4, 'a'), new HashSet<>(Arrays.asList(q4)));
+
+        nfa.initial = q1;
+
+        System.out.println(nfa.toDot());
+
+        FA dfa = nfa.determinize();
+        System.out.println("\n\n--------------------------\n\n");
+        System.out.println(dfa.toDot());
+
+    }
+
+    public static void SlidesNFAToFA(){
+
         NFA nfa = new NFA();
         nfa.alphabet = new Alphabet("01");
         nfa.states = new HashSet<>();
@@ -43,13 +85,6 @@ public class Main {
         FA dfa = nfa.determinize();
         System.out.println("\n\n--------------------------\n\n");
         System.out.println(dfa.toDot());
-        /*
-        nfa.GRSTEST();
-
-        System.out.println("\n\n-------------");
-
-        System.out.println(nfa.determinize().toDot());
-        */
 
     }
 }

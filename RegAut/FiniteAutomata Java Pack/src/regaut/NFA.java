@@ -482,7 +482,7 @@ public class NFA implements Cloneable {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         if(states.size() == 0){
-            sb.append("Ø");
+            return "Ø";
         } else {
             int i = 0;
             for (State s : states) {
