@@ -396,12 +396,55 @@ public class NFA implements Cloneable {
      */
     public FA determinize() {
 
-        NFA in = (NFA) this.clone();
-        in.removeLambdas();
+        NFA in = this.removeLambdas();
+
         FA newFA = new FA(this.alphabet);
+        newFA.accept = new HashSet<>();
 
-        HashSet<HashSet<State>> Q1 = new HashSet<>(); //the states of the new FA (represented as sets
+        //make the initial state into a set
+        Set<State> newFAInitial = new HashSet<>();
+        newFAInitial.add(in.initial);
 
+        //Make some objects that grs will modify:
+
+        //The transitions for the final FA
+        Map<StateSymbolPair, State> FATransitions = new HashMap<>();
+        //The states for the final FA (represented as sets, we will fix this later)
+        Set<Set<State>> FASetStates = new HashSet<>();
+        //The statemap, mapping a set of states to a singular state:
+        Map<Set<State>, State> FAStatemap = new HashMap<>();
+
+        //Call grs with the initial startset as the initial step
+        grs(newFAInitial, FATransitions, FASetStates, FAStatemap, in);
+
+        //Now the forementioned objects are updated
+
+        //Get the initial state from the updated statemap and set it as the initial state of newFA:
+        newFA.initial = FAStatemap.get(newFAInitial);
+
+        //Convert the states represented as sets into their corresponding state in the statemap
+        Set<State> FAStates = new HashSet<>();
+        for(Set<State> SetState : FASetStates){
+            State correspondingState = FAStatemap.get(SetState);
+            FAStates.add(correspondingState);
+
+            //and while we are at it, check if it is accepting, if so add it to newFA.accept
+            /*
+             * NOTE: This completely destroys the SetState from this point forward, however, we dont need it after this
+             */
+            SetState.retainAll(in.accept);
+            if(!(SetState.isEmpty())){
+                //q \intersect A != Ø
+                //so we add it to the newFA's accept states
+                newFA.accept.add(correspondingState);
+            }
+        }
+
+        //Set newFA states
+        newFA.states = FAStates;
+
+        //The recursive call already made all the transitions for us, so we set newFA's transitions to this map:
+        newFA.transitions = FATransitions;
 
 
 
@@ -410,35 +453,73 @@ public class NFA implements Cloneable {
 
     }
 
-    private Set<Set<State>> getReachableStates(State start, Set<State> visited, Set<Set<State>> visitedSets){
 
-        for (Character letter : alphabet.symbols) {
-            Set<State> _delta = delta(start, letter);
-            visitedSets.add(_delta);
-        }
+    private Set<Set<State>> grs(Set<State> start, Map<StateSymbolPair, State> transitions, Set<Set<State>> states, Map<Set<State>, State> statemap, NFA in){
 
-        visited.add(start); //we are in this node
-        for (Character letter : alphabet.symbols) {
-            Set<State> nextSet = delta(start, letter);
-            for(State next : nextSet){
-                System.out.println(next.name);
-                if(!visited.contains(next)) {
-                    getReachableStates(next, visited, visitedSets);
-                }
+        states.add(start); //this must be a possible state in the FA
+
+        statemap.put(start, new State(stateSetToStateName(start))); //Make the set start into a state, then store the state, so
+        //we can get it with a set as the key
+
+        for(Character letter : in.alphabet.symbols){
+            Set<State> nexts = new HashSet<>();
+            for(State next : start){
+                nexts.addAll(in.delta(next, letter));
             }
+            if(!(states.contains(nexts))) {
+                grs(nexts, transitions, states, statemap, in);
+            }
+
+            State from = statemap.get(start);
+            State to = statemap.get(nexts);
+            transitions.put(new StateSymbolPair(from, letter), to);
         }
 
-        return visitedSets;
+        return states;
     }
 
-    public Set<Set<State>> getFAStates(){
-        Set<State> visited = new HashSet<>();
-        Set<Set<State>> visitedSets = new HashSet<>();
-        visited.add(this.initial);
-        Set<State> initialSet = new HashSet<>();
-        initialSet.add(this.initial);
-        visitedSets.add(initialSet);
-        return getReachableStates(this.initial, visited, visitedSets);
+    private String stateSetToStateName(Set<State> states){
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        if(states.size() == 0){
+            sb.append("Ø");
+        } else {
+            int i = 0;
+            for (State s : states) {
+                if(i < states.size() - 1) {
+                    sb.append(s.name + ", ");
+                } else{
+                    sb.append(s.name);
+                }
+                i++;
+            }
+
+        }
+        sb.append("}");
+        return sb.toString();
     }
 
+    public void GRSTEST(){
+        NFA in = this.removeLambdas();
+        Set<State> start = new HashSet<>();
+        start.add(in.initial);
+        Map<StateSymbolPair, State> trans = new HashMap<>();
+        Set<Set<State>> r = grs(start, trans, new HashSet<>(), new HashMap<>(), in);
+        for(Set<State> s : r){
+            System.out.print("{");
+            for(State g : s){
+                System.out.print(g.name + ",");
+            }
+            System.out.print("}\n");
+        }
+
+        for(StateSymbolPair from : trans.keySet()){
+            System.out.print(from.state.name + " X " + from.symbol);
+
+            System.out.print(" -> " + trans.get(from).name);
+
+
+            System.out.print("\n");
+        }
+    }
 }

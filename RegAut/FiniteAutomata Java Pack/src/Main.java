@@ -37,14 +37,19 @@ public class Main {
 
         nfa.initial = q0;
 
-        for(Set<State> stateSet : nfa.getFAStates()){
-            System.out.print("{");
-            for(State s : stateSet){
-                System.out.print(s.name + ",");
-            }
-            System.out.print("}\n");
-        }
+
+        System.out.println(nfa.toDot());
+
+        FA dfa = nfa.determinize();
+        System.out.println("\n\n--------------------------\n\n");
+        System.out.println(dfa.toDot());
+        /*
+        nfa.GRSTEST();
+
+        System.out.println("\n\n-------------");
+
         System.out.println(nfa.determinize().toDot());
+        */
 
     }
 }
