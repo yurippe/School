@@ -201,17 +201,25 @@ public class FA implements Cloneable {
      * @exception IllegalArgumentException if <tt>c</tt> is not in the alphabet
      */
     public State delta(State q, char c) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        if (!alphabet.symbols.contains(c))
+            throw new IllegalArgumentException("symbol '"+c+"' not in alphabet");
+        return transitions.get(new StateSymbolPair(q, c));
     }
+
 
     /**
      * Performs transitions in extended transition function. [Martin, Def. 2.12]
-     * @return <img src="http://cs.au.dk/~amoeller/RegAut/delta.gif" alt="delta">*(q,s) 
+     * @return <img src="http://cs.au.dk/~amoeller/RegAut/delta.gif" alt="delta">*(q,s)
      * @exception IllegalArgumentException if a symbol in <tt>s</tt> is not in the alphabet
      */
     public State deltaStar(State q, String s) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        // (Using recursion instead of iteration would have been closer to
+        // the mathematical definition, but this code is simpler...)
+        for (char c : s.toCharArray())
+            q = delta(q,c);
+        return q;
     }
+
 
     /**
      * Runs the given string on this automaton. [Martin, Def. 2.14]
@@ -220,7 +228,12 @@ public class FA implements Cloneable {
      * @exception IllegalArgumentException if a symbol in <tt>s</tt> is not in the alphabet
      */
     public boolean accepts(String s) throws IllegalArgumentException {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        State endstate = deltaStar(initial, s);
+        if(accept.contains(endstate)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -285,43 +298,212 @@ public class FA implements Cloneable {
     }
 
     /**
-     * Converts this automaton into an equivalent {@link RegExp} regular expression. [Martin, Th. 3.30] 
+     * Finds regular expression in table or computes it if not there yet. (Used by {@link #toRegExp}.)
      */
-    public RegExp toRegExp() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+    private RegExp.Node tableLookup(State p, State q, int k, Map<StatePair,RegExp.Node[]> table, Map<Integer,State> statemap) {
+        RegExp.Node x = table.get(new StatePair(p, q))[k];
+        if (x==null) {
+            if (k==0) {
+                x = new RegExp.EmptyLanguageNode();
+                for (char c : alphabet.symbols)
+                    if (delta(p,c)==q)
+                        x = new RegExp.UnionNode(x, new RegExp.SymbolNode(c));
+                if (p==q)
+                    x = new RegExp.UnionNode(x, new RegExp.EmptyStringNode());
+            } else {
+                State r = statemap.get(k);
+                RegExp.Node x1 = tableLookup(p, q, k-1, table, statemap);
+                RegExp.Node x2 = tableLookup(p, r, k-1, table, statemap);
+                RegExp.Node x3 = tableLookup(r, r, k-1, table, statemap);
+                RegExp.Node x4 = tableLookup(r, q, k-1, table, statemap);
+                x = new RegExp.UnionNode(x1, new RegExp.ConcatNode(x2, new RegExp.ConcatNode(new RegExp.StarNode(x3), x4)));
+
+            }
+            table.get(new StatePair(p, q))[k] = x;
+        }
+        return x;
     }
 
     /**
-     * Constructs a new automaton that accepts the complement of the language of this automaton. 
+     * Converts this automaton into an equivalent {@link RegExp} regular expression. [Martin, Th. 3.30]
+     */
+    public RegExp toRegExp() {
+        Map<Integer,State> statemap = new HashMap<Integer,State>();
+        Map<StatePair,RegExp.Node[]> table = new HashMap<StatePair,RegExp.Node[]>(); // fill out this table lazily
+        // initialize
+        int n = 0;
+        for (State p : states) {
+            statemap.put(++n, p); // states are numbered from 1 to states.size()
+            for (State q : states)
+                table.put(new StatePair(p, q), new RegExp.Node[states.size()+1]);
+        }
+        // construct the abstract syntax tree for the regular expression
+        RegExp.Node x = new RegExp.EmptyLanguageNode();
+        for (State p : accept)
+            x = new RegExp.UnionNode(x, tableLookup(initial, p, states.size(), table, statemap));
+        return new RegExp(x, alphabet);
+    }
+
+    /**
+     * Constructs a new automaton that accepts the complement of the language of this automaton.
      * The input automaton is unmodified.
      */
     public FA complement() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        FA f = (FA) clone();
+        Set<State> s = new HashSet<State>();
+        s.addAll(f.states);
+        s.removeAll(f.accept);
+        f.accept = s;
+        return f;
     }
 
+
     /**
-     * Finds the set of states that are reachable from the initial state. [Martin, Exercise 2.27(b)] 
+     * Finds the set of states that are reachable from the initial state. [Martin, Exercise 2.27(b)]
      */
     public Set<State> findReachableStates() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        Set<State> reachable = new HashSet<State>(); // contains the states that are reachable and have been visited
+        Set<State> pending = new HashSet<State>(); // contains the states that are reachable but have not yet been visited
+        pending.add(initial);
+        while (!pending.isEmpty()) {
+            State q = pending.iterator().next();
+            pending.remove(q);
+            reachable.add(q);
+            for (char a : alphabet.symbols) {
+                State p = delta(q, a);
+                if (!reachable.contains(p))
+                    pending.add(p);
+            }
+        }
+        return reachable;
     }
 
+
     /**
-     * Constructs a new automaton with the same language as this automaton but without unreachable states. 
+     * Constructs a new automaton with the same language as this automaton but without unreachable states.
      * The input automaton is unmodified.
      */
     public FA removeUnreachableStates() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        FA f = (FA) clone();
+        Set<State> reachable = f.findReachableStates();
+        f.states.retainAll(reachable);
+        f.accept.retainAll(reachable);
+        for (StateSymbolPair sp : new HashSet<StateSymbolPair>(f.transitions.keySet())) {
+            if (!f.states.contains(sp.state))
+                f.transitions.remove(sp);
+        }
+        return f;
+    }
+
+
+    /**
+     * Unordered pair of states. Used in minimization operation.
+     */
+    static class UnorderedStatePair {
+
+        State s1, s2;
+
+        /**
+         * Constructs a new unordered pair.
+         */
+        UnorderedStatePair(State s1, State s2) {
+            this.s1 = s1;
+            this.s2 = s2;
+        }
+
+        /**
+         * Checks whether two unordered pairs are equal.
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof UnorderedStatePair))
+                return false;
+            UnorderedStatePair ss = (UnorderedStatePair) obj;
+            return (s1==ss.s1 && s2==ss.s2) || (s1==ss.s2 && s2==ss.s1);
+        }
+
+        /**
+         * Computes hash code for this object.
+         */
+        @Override
+        public int hashCode() {
+            return s1.hashCode() + s2.hashCode();
+        }
     }
 
     /**
-     * Constructs a new minimal automaton with the same language as this automaton. [Martin, Sec. 2.6] 
+     * Constructs a new minimal automaton with the same language as this automaton. [Martin, Sec. 2.6]
      * The input automaton is unmodified.
-     * Note: this textbook algorithm is simple to understand but not very efficient 
+     * Note: this textbook algorithm is simple to understand but not very efficient
      * compared to other existing algorithms.
      */
     public FA minimize() {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        FA f = removeUnreachableStates();
+        Set<UnorderedStatePair> marks = new HashSet<UnorderedStatePair>();
+        List<State> statelist = new ArrayList<State>(f.states); // ensure consistent state order
+        // first pass, divide into accept/reject states
+        for (State p : statelist)
+            for (State q : statelist) {
+                if (p == q)
+                    break; // traversing all *unordered* pairs of states
+                if (f.accept.contains(p)!=f.accept.contains(q))
+                    marks.add(new UnorderedStatePair(p, q));
+            }
+        // iteratively perform marking passes until nothing more happens
+        boolean done = false;
+        while (!done) { // (this could be made more efficient with a worklist)
+            done = true;
+            for (State p : statelist)
+                for (State q : statelist) {
+                    if (p == q)
+                        break;
+                    if (!marks.contains(new UnorderedStatePair(p, q)))
+                        for (char a : f.alphabet.symbols) {
+                            State r = f.delta(p, a);
+                            State s = f.delta(q, a);
+                            if (marks.contains(new UnorderedStatePair(r, s))) {
+                                marks.add(new UnorderedStatePair(p, q));
+                                done = false;
+                                break;
+                            }
+                        }
+                }
+        }
+        // start building the new automaton
+        FA n = new FA();
+        n.alphabet = alphabet;
+        Map<State,State> old2new = new HashMap<State,State>(); // map from old states to new states
+        Map<State,State> new2old = new HashMap<State,State>(); // map from new states to representatives in old states
+        // make new states
+        for (State r : statelist) {
+            boolean repr = true; // true if r is representative for its equivalence class
+            for (State s : statelist) {
+                if (r == s)
+                    break;
+                if (!marks.contains(new UnorderedStatePair(r, s))) {
+                    old2new.put(r, old2new.get(s));
+                    repr = false;
+                    break;
+                }
+            }
+            if (repr) {
+                State p = new State();
+                n.states.add(p);
+                if (f.accept.contains(r))
+                    n.accept.add(p);
+                old2new.put(r, p);
+                new2old.put(p, r);
+            }
+            if (r==f.initial)
+                n.initial = old2new.get(r);
+        }
+        // make new transitions
+        for (State p : n.states) {
+            State r = new2old.get(p);
+            for (char a : n.alphabet.symbols)
+                n.transitions.put(new StateSymbolPair(p, a), old2new.get(f.delta(r, a)));
+        }
+        return n;
     }
 
     /**
@@ -549,14 +731,6 @@ public class FA implements Cloneable {
 
         Set<State> visited = new HashSet<>();
         return getReachableStates(start, transitions, alphabet, visited);
-    }
-
-    /**
-     *
-     * @return the reachable states of this automaton
-     */
-    public Set<State> getReachableStates(){
-        return getReachableStates(initial, transitions, alphabet);
     }
 
 

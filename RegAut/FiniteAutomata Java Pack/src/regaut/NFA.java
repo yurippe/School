@@ -164,7 +164,19 @@ public class NFA implements Cloneable {
      * @param c the symbol in the singleton string
      */
     public static NFA makeSingleton(Alphabet a, char c) {
-        throw new UnsupportedOperationException("method not implemented yet!");
+        NFA nfa = new NFA();
+        nfa.alphabet = a;
+        State s = new State();
+        State e = new State();
+        nfa.states.add(s);
+        nfa.states.add(e);
+        nfa.initial = s;
+        nfa.accept.add(e);
+
+        Set<State> es = new HashSet<>();
+        es.add(e);
+        nfa.transitions.put(new StateSymbolPair(s, c), es);
+        return nfa;
     }
 
     /**

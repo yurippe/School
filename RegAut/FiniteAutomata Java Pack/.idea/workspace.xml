@@ -48,25 +48,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NFA.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="NFA.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/regaut/NFA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.27402136">
-              <caret line="503" column="43" selection-start-line="503" selection-start-column="43" selection-end-line="503" selection-end-column="43" />
+            <state vertical-scroll-proportion="-15.827586">
+              <caret line="178" column="19" selection-start-line="178" selection-start-column="19" selection-end-line="178" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2756#2767#0" expanded="true" />
                 <element signature="e#4487#4500#0" expanded="true" />
                 <element signature="e#4993#5000#0" expanded="true" />
-                <element signature="e#6718#6733#0" expanded="true" />
-                <element signature="e#9630#9637#0" expanded="true" />
-                <element signature="e#9750#9757#0" expanded="true" />
-                <element signature="e#10046#10053#0" expanded="true" />
-                <element signature="e#10569#10576#0" expanded="true" />
-                <element signature="e#10716#10723#0" expanded="true" />
-                <element signature="e#13963#13976#0" expanded="true" />
-                <element signature="e#14295#14302#0" expanded="true" />
-                <element signature="e#14742#14749#0" expanded="true" />
+                <element signature="e#7002#7017#0" expanded="true" />
+                <element signature="e#9914#9921#0" expanded="true" />
+                <element signature="e#10034#10041#0" expanded="true" />
+                <element signature="e#10330#10337#0" expanded="true" />
+                <element signature="e#10853#10860#0" expanded="true" />
+                <element signature="e#11000#11007#0" expanded="true" />
+                <element signature="e#14247#14260#0" expanded="true" />
+                <element signature="e#14579#14586#0" expanded="true" />
+                <element signature="e#15026#15033#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -99,14 +99,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FA.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="FA.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.8965516">
-              <caret line="535" column="0" selection-start-line="535" selection-start-column="0" selection-end-line="538" selection-end-column="13" />
+            <state vertical-scroll-proportion="4.8718863">
+              <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
               <folding>
-                <element signature="e#9614#9627#0" expanded="true" />
-                <element signature="e#10131#10138#0" expanded="true" />
+                <element signature="e#9953#9966#0" expanded="true" />
+                <element signature="e#10470#10477#0" expanded="true" />
+                <element signature="e#12094#12109#0" expanded="true" />
+                <element signature="e#12169#12194#0" expanded="true" />
+                <element signature="e#13062#13069#0" expanded="true" />
+                <element signature="e#13385#13392#0" expanded="true" />
+                <element signature="e#13500#13507#0" expanded="true" />
+                <element signature="e#15382#15383#0" expanded="true" />
+                <element signature="e#15442#15443#0" expanded="true" />
+                <element signature="e#15862#15882#0" expanded="true" />
+                <element signature="e#15931#15938#0" expanded="true" />
+                <element signature="e#17410#17423#0" expanded="true" />
+                <element signature="e#17510#17523#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -199,9 +210,9 @@
         <option value="$PROJECT_DIR$/src/regaut/AutomatonNotWellDefinedException.java" />
         <option value="$PROJECT_DIR$/src/regaut/Alphabet.java" />
         <option value="$PROJECT_DIR$/src/regaut/RegExp.java" />
-        <option value="$PROJECT_DIR$/src/regaut/FA.java" />
-        <option value="$PROJECT_DIR$/src/regaut/NFA.java" />
         <option value="$PROJECT_DIR$/src/Main.java" />
+        <option value="$PROJECT_DIR$/src/regaut/NFA.java" />
+        <option value="$PROJECT_DIR$/src/regaut/FA.java" />
       </list>
     </option>
   </component>
@@ -777,12 +788,12 @@
       <option name="number" value="Default" />
       <updated>1461602216727</updated>
       <workItem from="1461602218718" duration="22138000" />
-      <workItem from="1461791304708" duration="16334000" />
+      <workItem from="1461791304708" duration="18463000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38472000" />
+    <option name="totallyTimeSpent" value="40601000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -875,8 +886,19 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="438" column="40" selection-start-line="438" selection-start-column="40" selection-end-line="438" selection-end-column="40" />
           <folding>
-            <element signature="e#9614#9627#0" expanded="true" />
-            <element signature="e#10131#10138#0" expanded="true" />
+            <element signature="e#9953#9966#0" expanded="true" />
+            <element signature="e#10470#10477#0" expanded="true" />
+            <element signature="e#12094#12109#0" expanded="true" />
+            <element signature="e#12169#12194#0" expanded="true" />
+            <element signature="e#13062#13069#0" expanded="true" />
+            <element signature="e#13385#13392#0" expanded="true" />
+            <element signature="e#13500#13507#0" expanded="true" />
+            <element signature="e#15382#15383#0" expanded="true" />
+            <element signature="e#15442#15443#0" expanded="true" />
+            <element signature="e#15862#15882#0" expanded="true" />
+            <element signature="e#15931#15938#0" expanded="true" />
+            <element signature="e#17410#17423#0" expanded="true" />
+            <element signature="e#17510#17523#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1078,17 +1100,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.8965516">
-          <caret line="535" column="0" selection-start-line="535" selection-start-column="0" selection-end-line="538" selection-end-column="13" />
-          <folding>
-            <element signature="e#9614#9627#0" expanded="true" />
-            <element signature="e#10131#10138#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/regaut/StateSymbolPair.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1120,22 +1131,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/regaut/NFA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27402136">
-          <caret line="503" column="43" selection-start-line="503" selection-start-column="43" selection-end-line="503" selection-end-column="43" />
+        <state vertical-scroll-proportion="-15.827586">
+          <caret line="178" column="19" selection-start-line="178" selection-start-column="19" selection-end-line="178" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2756#2767#0" expanded="true" />
             <element signature="e#4487#4500#0" expanded="true" />
             <element signature="e#4993#5000#0" expanded="true" />
-            <element signature="e#6718#6733#0" expanded="true" />
-            <element signature="e#9630#9637#0" expanded="true" />
-            <element signature="e#9750#9757#0" expanded="true" />
-            <element signature="e#10046#10053#0" expanded="true" />
-            <element signature="e#10569#10576#0" expanded="true" />
-            <element signature="e#10716#10723#0" expanded="true" />
-            <element signature="e#13963#13976#0" expanded="true" />
-            <element signature="e#14295#14302#0" expanded="true" />
-            <element signature="e#14742#14749#0" expanded="true" />
+            <element signature="e#7002#7017#0" expanded="true" />
+            <element signature="e#9914#9921#0" expanded="true" />
+            <element signature="e#10034#10041#0" expanded="true" />
+            <element signature="e#10330#10337#0" expanded="true" />
+            <element signature="e#10853#10860#0" expanded="true" />
+            <element signature="e#11000#11007#0" expanded="true" />
+            <element signature="e#14247#14260#0" expanded="true" />
+            <element signature="e#14579#14586#0" expanded="true" />
+            <element signature="e#15026#15033#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="4.8718863">
+          <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
+          <folding>
+            <element signature="e#9953#9966#0" expanded="true" />
+            <element signature="e#10470#10477#0" expanded="true" />
+            <element signature="e#12094#12109#0" expanded="true" />
+            <element signature="e#12169#12194#0" expanded="true" />
+            <element signature="e#13062#13069#0" expanded="true" />
+            <element signature="e#13385#13392#0" expanded="true" />
+            <element signature="e#13500#13507#0" expanded="true" />
+            <element signature="e#15382#15383#0" expanded="true" />
+            <element signature="e#15442#15443#0" expanded="true" />
+            <element signature="e#15862#15882#0" expanded="true" />
+            <element signature="e#15931#15938#0" expanded="true" />
+            <element signature="e#17410#17423#0" expanded="true" />
+            <element signature="e#17510#17523#0" expanded="true" />
           </folding>
         </state>
       </provider>
