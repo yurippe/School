@@ -84,9 +84,23 @@ def flet(x, y, z):
             #Return
             return (XZ or YZ)
 
+    def printFlet(Q, i, j):
+        if (i == 0 and j == 0):
+            return
+        if Q[i-1][j] == True:
+            printFlet(Q, i-1, j)
+            print i+j
+        elif Q[i][j-1] == True:
+            printFlet(Q, i, j-1)
+
     result = F(len(x), len(y))
+    
     for s in local.saves:
         print s
+
+    print "FLET X INDEXES"
+    printFlet(local.saves, len(x), len(y))
+    print "----------"
     print "Number of calls with the argument i,j being the indexes:"
     print local.visits
     print "X indexes:"

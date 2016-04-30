@@ -102,7 +102,7 @@
       <file leaf-file-name="FA.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="4.8718863">
+            <state vertical-scroll-proportion="7.4128113">
               <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
               <folding>
                 <element signature="e#9953#9966#0" expanded="true" />
@@ -788,12 +788,12 @@
       <option name="number" value="Default" />
       <updated>1461602216727</updated>
       <workItem from="1461602218718" duration="22138000" />
-      <workItem from="1461791304708" duration="18463000" />
+      <workItem from="1461791304708" duration="19061000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40601000" />
+    <option name="totallyTimeSpent" value="41199000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1153,7 +1153,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.8718863">
+        <state vertical-scroll-proportion="7.4128113">
           <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
           <folding>
             <element signature="e#9953#9966#0" expanded="true" />
