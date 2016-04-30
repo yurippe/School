@@ -408,6 +408,7 @@ public class NFA implements Cloneable {
      */
     public FA determinize() {
 
+        //Lambda-eliminate this NFA, and determinize it, so this object is untouched.
         NFA in = this.removeLambdas();
 
         FA newFA = new FA(this.alphabet);
@@ -442,7 +443,7 @@ public class NFA implements Cloneable {
 
             //and while we are at it, check if it is accepting, if so add it to newFA.accept
             /*
-             * NOTE: This completely destroys the SetState from this point forward, however, we dont need it after this
+             * WARNING: This completely destroys the SetState from this point forward, however, we don't need it after this
              */
             SetState.retainAll(in.accept);
             if(!(SetState.isEmpty())){
@@ -473,20 +474,27 @@ public class NFA implements Cloneable {
         statemap.put(start, new State(stateSetToStateName(start))); //Make the set start into a state, then store the state, so
         //we can get it with a set as the key
 
+        //Loop through all the symbols in the alphabet
         for(Character letter : in.alphabet.symbols){
             Set<State> nexts = new HashSet<>();
+            //For every next state we can reach, add them to nexts
             for(State next : start){
                 nexts.addAll(in.delta(next, letter));
             }
+            //nexts represents the next state in our FA (in the Set form)
+            //if we already have this set of states, we dont recurse further on it, otherwise we do
             if(!(states.contains(nexts))) {
                 grs(nexts, transitions, states, statemap, in);
             }
 
+            //Since our FA needs to go somewhere on all symbols in our alphabet, we know we must add a transition for it
             State from = statemap.get(start);
+            //nexts can be empty here, in which case this state always goes to the Ø state, (no special case).
             State to = statemap.get(nexts);
+            //Add this as a transition in our new FA
             transitions.put(new StateSymbolPair(from, letter), to);
         }
-
+        //We don't really need nor use this, since we pass objects as parameters, and mutate those objects.
         return states;
     }
 
@@ -509,29 +517,5 @@ public class NFA implements Cloneable {
         }
         sb.append("}");
         return sb.toString();
-    }
-
-    public void GRSTEST(){
-        NFA in = this.removeLambdas();
-        Set<State> start = new HashSet<>();
-        start.add(in.initial);
-        Map<StateSymbolPair, State> trans = new HashMap<>();
-        Set<Set<State>> r = grs(start, trans, new HashSet<>(), new HashMap<>(), in);
-        for(Set<State> s : r){
-            System.out.print("{");
-            for(State g : s){
-                System.out.print(g.name + ",");
-            }
-            System.out.print("}\n");
-        }
-
-        for(StateSymbolPair from : trans.keySet()){
-            System.out.print(from.state.name + " X " + from.symbol);
-
-            System.out.print(" -> " + trans.get(from).name);
-
-
-            System.out.print("\n");
-        }
     }
 }

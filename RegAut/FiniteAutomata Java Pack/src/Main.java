@@ -40,11 +40,12 @@ public class Main {
         nfa.transitions.put(new StateSymbolPair(q4, 'a'), new HashSet<>(Arrays.asList(q4)));
 
         nfa.initial = q1;
-
+        System.out.println("\n\n------------ORIGINAL------------\n\n");
         System.out.println(nfa.toDot());
-
+        System.out.println("\n\n------------LAMBDA-ELIMINATED------------\n\n");
+        System.out.println(nfa.removeLambdas().toDot());
+        System.out.println("\n\n------------DETERMINIZED------------\n\n");
         FA dfa = nfa.determinize();
-        System.out.println("\n\n--------------------------\n\n");
         System.out.println(dfa.toDot());
 
     }

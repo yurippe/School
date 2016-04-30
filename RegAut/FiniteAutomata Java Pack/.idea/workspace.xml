@@ -23,11 +23,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.65482235">
+              <caret line="47" column="35" selection-start-line="47" selection-start-column="35" selection-end-line="47" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#SlidesNFAToFA#0;class#Main#0" expanded="false" />
@@ -51,8 +51,8 @@
       <file leaf-file-name="NFA.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/regaut/NFA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.827586">
-              <caret line="178" column="19" selection-start-line="178" selection-start-column="19" selection-end-line="178" selection-end-column="19" />
+            <state vertical-scroll-proportion="-14.103448">
+              <caret line="456" column="32" selection-start-line="456" selection-start-column="32" selection-end-line="456" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2756#2767#0" expanded="true" />
@@ -99,10 +99,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FA.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FA.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="7.4128113">
+            <state vertical-scroll-proportion="-71.55173">
               <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
               <folding>
                 <element signature="e#9953#9966#0" expanded="true" />
@@ -210,9 +210,9 @@
         <option value="$PROJECT_DIR$/src/regaut/AutomatonNotWellDefinedException.java" />
         <option value="$PROJECT_DIR$/src/regaut/Alphabet.java" />
         <option value="$PROJECT_DIR$/src/regaut/RegExp.java" />
-        <option value="$PROJECT_DIR$/src/Main.java" />
-        <option value="$PROJECT_DIR$/src/regaut/NFA.java" />
         <option value="$PROJECT_DIR$/src/regaut/FA.java" />
+        <option value="$PROJECT_DIR$/src/regaut/NFA.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
       </list>
     </option>
   </component>
@@ -788,12 +788,12 @@
       <option name="number" value="Default" />
       <updated>1461602216727</updated>
       <workItem from="1461602218718" duration="22138000" />
-      <workItem from="1461791304708" duration="19061000" />
+      <workItem from="1461791304708" duration="20316000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41199000" />
+    <option name="totallyTimeSpent" value="42454000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1118,21 +1118,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        <state vertical-scroll-proportion="-71.55173">
+          <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#SlidesNFAToFA#0;class#Main#0" expanded="false" />
+            <element signature="e#9953#9966#0" expanded="true" />
+            <element signature="e#10470#10477#0" expanded="true" />
+            <element signature="e#12094#12109#0" expanded="true" />
+            <element signature="e#12169#12194#0" expanded="true" />
+            <element signature="e#13062#13069#0" expanded="true" />
+            <element signature="e#13385#13392#0" expanded="true" />
+            <element signature="e#13500#13507#0" expanded="true" />
+            <element signature="e#15382#15383#0" expanded="true" />
+            <element signature="e#15442#15443#0" expanded="true" />
+            <element signature="e#15862#15882#0" expanded="true" />
+            <element signature="e#15931#15938#0" expanded="true" />
+            <element signature="e#17410#17423#0" expanded="true" />
+            <element signature="e#17510#17523#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/regaut/NFA.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.827586">
-          <caret line="178" column="19" selection-start-line="178" selection-start-column="19" selection-end-line="178" selection-end-column="19" />
+        <state vertical-scroll-proportion="-14.103448">
+          <caret line="456" column="32" selection-start-line="456" selection-start-column="32" selection-end-line="456" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2756#2767#0" expanded="true" />
@@ -1151,24 +1162,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/regaut/FA.java">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="7.4128113">
-          <caret line="733" column="5" selection-start-line="733" selection-start-column="5" selection-end-line="733" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.65482235">
+          <caret line="47" column="35" selection-start-line="47" selection-start-column="35" selection-end-line="47" selection-end-column="35" />
           <folding>
-            <element signature="e#9953#9966#0" expanded="true" />
-            <element signature="e#10470#10477#0" expanded="true" />
-            <element signature="e#12094#12109#0" expanded="true" />
-            <element signature="e#12169#12194#0" expanded="true" />
-            <element signature="e#13062#13069#0" expanded="true" />
-            <element signature="e#13385#13392#0" expanded="true" />
-            <element signature="e#13500#13507#0" expanded="true" />
-            <element signature="e#15382#15383#0" expanded="true" />
-            <element signature="e#15442#15443#0" expanded="true" />
-            <element signature="e#15862#15882#0" expanded="true" />
-            <element signature="e#15931#15938#0" expanded="true" />
-            <element signature="e#17410#17423#0" expanded="true" />
-            <element signature="e#17510#17523#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="method#SlidesNFAToFA#0;class#Main#0" expanded="false" />
           </folding>
         </state>
       </provider>
