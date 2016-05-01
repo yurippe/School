@@ -67,10 +67,32 @@ def Euler(graph):
 
     if len(result) > 1:
         #we need to combine the results
-        pass
+        treatMap = {}
+        #O(E)
+        for loop in result[1:]:
+            treatAs = loop[0].getFrom() #the first node (should also be the last)
+            if treatAs in treatMap.keys():
+                treatMap[treatAs] += loop
+            else:
+                treatMap[treatAs] = loop
+
+
+        i = 0
+        while i < len(result[0]):
+            path = result[0][i]
+            to = path.getTo()
+            if to in treatMap.keys():
+                result[0] = result[0][:i+1] + treatMap[to] + result[0][i+1:]
+                del treatMap[to]
+            i += 1
+       
             
+                
+                
+    elif len(result) == 0:
+        return [[]]  
         
-    return result
+    return result[0]
        
 
 
@@ -96,9 +118,7 @@ if __name__ == "__main__":
 
     r = Euler(vertixes)
 
-    for path in r:
-        print "--"
-        for edge in path:
-            print str(edge.getFrom()) + "-->" + str(edge.getTo())
+    for edge in r:
+        print str(edge.getFrom()) + "-->" + str(edge.getTo())
 
     
