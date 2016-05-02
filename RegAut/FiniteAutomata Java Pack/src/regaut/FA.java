@@ -228,12 +228,7 @@ public class FA implements Cloneable {
      * @exception IllegalArgumentException if a symbol in <tt>s</tt> is not in the alphabet
      */
     public boolean accepts(String s) throws IllegalArgumentException {
-        State endstate = deltaStar(initial, s);
-        if(accept.contains(endstate)){
-            return true;
-        } else {
-            return false;
-        }
+        return this.accept.contains(deltaStar(this.initial, s));
     }
 
     /**
