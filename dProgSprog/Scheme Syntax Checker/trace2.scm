@@ -1,0 +1,16 @@
+(trace
+is-definition?
+is-time-expression?
+is-if-expression?
+is-and-expression?
+is-or-expression?
+is-cond-expression?
+is-case-expression?
+is-let-expression?
+is-letstar-expression?
+is-letrec-expression?
+is-begin-expression?
+is-unless-expression?
+is-quote-expression?
+is-lambda-abstraction?
+is-application?)
