@@ -7,14 +7,15 @@ class Matrix(object):
 
     class MatrixIndexOutOfBoundException(Exception):
         def __init__(self, arggiven, matrix, *args):
-            self.message = "Matrix index out of bound, key given: " + str(arggiven) + " ; real size: " + "(" + str(matrix.n) + ", " + str(matrix.m) + ")"
+            self.message = "Matrix index out of bound, key given: " + str(arggiven) + " ; real size: "
+            self.message += "(" + str(matrix.startindex) + ".." + str(matrix.n) + ", " + str(matrix.startindex) + ".." + str(matrix.m) + ")"
             super(Exception, self).__init__(self.message)
 
 
-    def __init__(self, n, m, initvalue=None, outOfBoundValue=Exception):
+    def __init__(self, n, m, initvalue=None, outOfBoundValue=Exception, startindex=0):
         self.n = n
         self.m = m
-        self.startindex = 0
+        self.startindex = startindex
         self.initvalue = initvalue
         self.outofbound = outOfBoundValue
 
@@ -26,7 +27,7 @@ class Matrix(object):
 
     def __getitem__(self, key):
         if type(key) == tuple:
-            if (key[0] > self.n + self.startindex) or (key[1] > self.m + self.startindex):
+            if (key[0] > self.n + self.startindex) or (key[1] > self.m + self.startindex) or (key[0] < self.startindex) or (key[1] < self.startindex):
                 if self.outofbound == Exception:
                     raise self.MatrixIndexOutOfBoundException(key, self)
                     return self.outofbound
@@ -38,7 +39,7 @@ class Matrix(object):
 
     def __setitem__(self, key, value):
         if type(key) == tuple:
-            if (key[0] > self.n + self.startindex) or (key[1] > self.m + self.startindex):
+            if (key[0] >= self.n + self.startindex) or (key[1] >= self.m + self.startindex) or (key[0] < self.startindex) or (key[1] < self.startindex):
                 if self.outofbound == Exception:
                     raise self.MatrixIndexOutOfBoundException(key, self)
                 else:
@@ -46,11 +47,23 @@ class Matrix(object):
             self.matrix[key[0]][key[1]] = value
         else:
             raise self.MatrixKeyException()
+
+    def printMatrix(self, cellwidth=5):
+        for i in range(self.startindex, self.n + self.startindex):
+            r = self.matrix[i]
+            row = []
+            for j in range(self.startindex, self.m + self.startindex):
+                row.append(r[j])
+
+            fstring = "| " + "".join(["{row[" + str(i) + "]: =" + str(cellwidth) + "} || " for i in range(0, self.m - self.startindex)])
+            fstring += "{row[" + str(self.m - self.startindex) + "]: =" + str(cellwidth) + "}" + " |"
+            print(fstring.format(row=row))
+            
         
 if __name__ == "__main__":
 
-    matrix = Matrix(5, 10, "Initial Value")
-    matrix[1,3] = "Pretty matrix"
-    print(matrix[3,1])
-    print(matrix[1,3])
-    print(matrix[3,3])
+    matrix = Matrix(5, 10, initvalue=None, startindex=1)
+
+    matrix[5,10] = 1351
+
+    matrix.printMatrix()
