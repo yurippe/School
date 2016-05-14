@@ -40,15 +40,15 @@ def FindShortestPathInG(G):
             
         if v["up"] != None:
             Relax(v, v["up"], w)
-            v = v["up"]
-
-        if v["up"] == None: break
+            
+        v = v["up"]
+        if v == None: break
     
 
 if __name__ == "__main__":  
 #Gittergraf
     g = Graph(INFINITY, None, 5)
-    k = 5
+    k = 3
     for i in range(1,k+1):
         for j in range(1, k+1):
             t = (i,j)
@@ -81,6 +81,29 @@ if __name__ == "__main__":
             tfrom = (i,j)
             tto = (i+1, j)
             g.addEdge(tfrom, tto)
+
+    #Steffans test case:
+    #i = 1
+    g.setWeight((1,1),(1,2),2)
+    g.setWeight((1,1),(2,1),4)
+    g.setWeight((1,2),(1,1),1)
+    g.setWeight((1,2),(2,2),3)
+    g.setWeight((1,2),(1,3),5)
+    g.setWeight((1,3),(1,2),3)
+    g.setWeight((1,3),(2,3),3)
+    #i = 2
+    g.setWeight((2,1),(2,2),2)
+    g.setWeight((2,1),(3,1),2)
+    g.setWeight((2,2),(2,1),2)
+    g.setWeight((2,2),(3,2),6)
+    g.setWeight((2,2),(2,3),2)
+    g.setWeight((2,3),(2,2),3)
+    g.setWeight((2,3),(3,3),2)
+    #i = 3
+    g.setWeight((3,1),(3,2),4)
+    g.setWeight((3,2),(3,1),1)
+    g.setWeight((3,2),(3,3),2)
+    g.setWeight((3,3),(3,2),1)
 
     #print(g.listEdges())
     #print(g[1,1]["right"])
