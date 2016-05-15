@@ -2,6 +2,43 @@
 ;;; Checkers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;Done
+(define check-bindings-duplicates
+  (lambda (bindings)
+    (letrec ([visit (lambda (remaining visited)
+
+        ;;We can assume that the bindings are valid, because they passed check-bindings
+        ;;bindings is a list of with binding elements
+        ;;a binding element is a pair, where the car is the vairable, this cant be duplicated
+        (cond
+        [(null? remaining) #t]
+        [(pair? remaining)
+         (let ([binding (car remaining)])
+          (cond
+            [(pair? binding)
+            (if (member (car binding) visited)
+                #f
+                (visit (cdr remaining) (cons (car binding) visited)))]
+            [(null? binding) #f] ;;Do we need this condition? if not remove cond
+            [else #f]
+            )
+
+         )
+
+        ]
+        [else
+          (begin
+            (unless check-silently
+                (printf "check-bindings-duplicates -- expected pair: ~s~n" bindings))
+              #f)]
+
+      ))])
+
+    (visit bindings '())
+
+  )))
+
+
+;;Done
 (define check-program
   (lambda (v)
     (cond
@@ -57,7 +94,10 @@
 				(and (check-expression (car v))
 						 (check-expressions (cdr v)))]
 			[else
-				#f]
+      (begin
+        (unless check-silently
+          (printf "check-expressions -- expected pair: ~s~n" v))
+        #f)]
 			)))
 
 ;;Done
@@ -90,12 +130,20 @@
 	(lambda (v)
 	(cond
 		[(proper-list-of-given-length? v 1)
-			(check-else-clause (car v))]
+			(if (check-else-clause (car v))
+        #t
+        (begin
+  			 (unless check-silently
+  				(printf "check-cond-clauses -- expected else clause ~s~n" v))
+  			#f))]
 		[(pair? v)
 			(and (check-cond-clause (car v))
 					 (check-cond-clauses (cdr v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-cond-clauses -- expected pair ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
@@ -112,7 +160,10 @@
 									 (equal? (cond-clause-1 v) '=>)
 				 					 (check-expression (cond-clause-2 v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-cond-clause -- unrecognized input: ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
@@ -122,7 +173,10 @@
 		[(pair? v)
 			(check-expression (else-clause-1 v))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-else-clause -- expected (else <expression>): ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
@@ -137,12 +191,18 @@
 	(lambda (v)
 	(cond
 		[(proper-list-of-given-length? v 1)
-			(check-else-clause (car v))]
+			(if (check-else-clause (car v)) #t (begin
+  			(unless check-silently
+  				(printf "check-case-clauses -- expected else clause: ~s~n" v))
+  			#f))]
 		[(pair? v)
 			(and (check-case-clause (car v))
 					 (check-case-clauses (cdr v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-case-clauses -- expected pair: ~s~n" v))
+      #f)]
 		)))
 
 ;;TODO hmmmm
@@ -153,7 +213,10 @@
 			(and (check-quotations (case-clause-0 v))
 					 (check-expression (case-clause-1 v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-case-clause -- expected: (<quotations> <expression>): ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
@@ -166,7 +229,10 @@
 			(and (check-quotation (car v))
 					 (check-quotations (cdr v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-quotations -- expected pair: ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
@@ -174,6 +240,7 @@
 	(lambda (bindings exp)
 		(and (check-let-bindings bindings)
 				 (check-expression exp)
+         (check-bindings-duplicates bindings) ;;TODO
 )))
 
 ;;Done
@@ -184,15 +251,18 @@
 			#t]
 		[(pair? v)
 			(and (check-let-binding (car v))
-					 (check-let-bindings (cdr v)))]
+					 (check-let-bindings (cdr v)))] ;;TODO
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-let-bindings -- expected pair: ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
 (define check-let-binding
 	(lambda (v)
-		(and (check-variable (let-binding-0 v)) (check-expression (let-binding-1 v))
+		(and (proper-list-of-given-length? v 2) (check-variable (let-binding-0 v)) (check-expression (let-binding-1 v))
 )))
 
 ;;Done
@@ -211,20 +281,24 @@
 			(and (check-letstar-binding (car v))
 					 (check-letstar-bindings (cdr v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-letstar-bindings -- expected pair: ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
 (define check-letstar-binding
 	(lambda (v)
-	(and (check-variable (letstar-binding-0 v)) (check-expression (letstar-binding-1 v))
+	(and (proper-list-of-given-length? v 2) (check-variable (letstar-binding-0 v)) (check-expression (letstar-binding-1 v))
 )))
 
 ;;Done
 (define check-letrec-expression
 	(lambda (bindings exp)
 			(and (check-letrec-bindings bindings)
-			 		 (check-expression exp))))
+			 		 (check-expression exp)
+           (check-bindings-duplicates bindings))))
 
 ;;Done
 (define check-letrec-bindings
@@ -236,13 +310,16 @@
 			(and (check-letrec-binding (car v))
 					 (check-letrec-bindings (cdr v)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-letrec-bindings -- expected pair: ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
 (define check-letrec-binding
 	(lambda (v)
-		(and (check-variable (letrec-binding-0 v)) (check-lambda-abstraction (letrec-binding-1 v)))))
+		(and (proper-list-of-given-length? v 2) (check-variable (letrec-binding-0 v)) (check-lambda-abstraction (letrec-binding-1 v)))))
 
 ;;Done
 (define check-begin-expression
@@ -282,7 +359,10 @@
 		 (and (check-quotation (car v)) (check-quotation (cdr v)))
 		]
 
-		[else #f])))
+		[else     (begin
+          (unless check-silently
+            (printf "check-quotation -- not a quotation: ~s~n" v))
+          #f)])))
 
 ;;Done
 (define check-lambda-abstraction
@@ -290,13 +370,18 @@
 	(cond
 		[(proper-list-of-given-length? v 3)
 			(and (check-lambda-formals (list-ref v 1))
-					 (check-expression (list-ref v 2)))]
+					 (check-expression (list-ref v 2))
+           (check-lambda-formals-unique (list-ref v 1)))]
 		[(proper-list-of-given-length? v 4)
 			(and (check-variable (list-ref v 1))
 				 	 (check-lambda-formals (list-ref v 2))
-					 (check-expression (list-ref v 3)))]
+					 (check-expression (list-ref v 3))
+           (check-lambda-formals-unique (list-ref v 2)))]
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-lambda-abstraction -- not a valid lambda abstraction: ~s~n" v))
+      #f)]
 		)))
 
 ;;Done
@@ -312,8 +397,41 @@
 		]
 
 		[else
-			#f]
+    (begin
+      (unless check-silently
+        (printf "check-lambda-formals -- expected pair: ~s~n" v))
+      #f)]
 		)))
+
+(define check-lambda-formals-unique
+  (lambda (v)
+    (letrec ([visit (lambda (rem checked)
+      (cond
+
+        [(null? rem) #t]
+        [(pair? rem)
+          (if (member (car rem) checked)
+            (begin
+              (unless check-silently
+                (printf "check-lambda-formals-unique -- Non unique: ~s~n" (car rem)))
+            #f)
+            (visit (cdr rem) (cons (car rem) checked)))]
+        [(is-variable? rem) (check-variable rem)]
+
+        [else
+          (begin
+            (unless check-silently
+              (printf "hmm -- Non unique: ~s~n" rem))
+                    #f)]
+
+      ))])
+
+      (visit v '())
+
+      )
+
+  ))
+
 
 ;;Done
 (define check-application

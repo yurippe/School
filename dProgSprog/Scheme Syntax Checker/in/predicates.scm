@@ -85,6 +85,7 @@
 	(lambda (v)
 		(and (pair? v)
 				 (equal? (car v) 'begin)
+         (pair? (cdr v))
 )))
 
 ;;Done

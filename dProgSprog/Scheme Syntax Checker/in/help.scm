@@ -1,3 +1,11 @@
+;;;Resume of scientific article:
+
+;Isaac Asimov says that there is no theory that is either 100% right or 100%
+;wrong. He says that theories are fuzzy. One must refine theories to make them
+;better and more accurate, but one should not dismiss something as wrong,
+;rather incomplete.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Help methods
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -5,23 +13,6 @@
 (define check-silently #f)
 ;;;;;;;;;;;;;
 
-(define is-set? (lambda (v)
-  (letrec (
-    [f (lambda (l s) (
-
-      (cond
-
-        [(null? l) #t]
-        [(pair? l)
-         (if (member (car l) s)
-             #f
-             (f (cdr l) (cons (car l) s)))
-        ]
-        [else #f];;TODO
-        )
-  ))])
-  (f v (list))
-  )))
 
 
 (define list-strictly-longer-than?
