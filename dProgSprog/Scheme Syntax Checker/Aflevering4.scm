@@ -587,7 +587,7 @@
 	(lambda (v)
 	(cond
 		[(proper-list-of-given-length? v 1)
-			(if (check-else-clause (car v))
+			(if (and (is-else-clause? (car v)) (check-else-clause (car v)))
         #t
         (begin
   			 (unless check-silently
