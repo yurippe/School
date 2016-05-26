@@ -1,6 +1,13 @@
 import Environment
 from Evaluator import eval_exp
+from SchymeExceptions import *
 from Types import *
+from Wrappers import SchemeProcedureWrapper
+import MathLib
+from SchymeParser import Parser
+
+def NOT_IMPLEMENTED(environment, *args):
+    raise NotImplementedError("Not implemented")
 
 def define(environment, *args):
     try:
@@ -11,7 +18,6 @@ def define(environment, *args):
     if environment.isKeyword(variable):
         raise SyntaxError("'" + str(variable) + "' is a reserved keyword")
     environment[variable] = expression
-
 
 
 def lambdaexp(environment, *args):
@@ -103,7 +109,7 @@ def gte(environment, *args):
             return False
     return True
 
-def eq(environment, *args):
+def equal(environment, *args):
     try: c = args[0]
     except IndexError: raise SyntaxError("Invalid argument count '<' takes at least 1 argument")
     i = 1
@@ -115,6 +121,49 @@ def eq(environment, *args):
             return False
     return True
 
+def eq_is(environment, *args):
+    try: (a, b) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'eq?' takes at exactly 2 argument")
+
+    return (a is b)
+
+def abs_scheme(environment, *args):
+    try: (n,) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'abs' takes at exactly 1 argument")
+    return abs(n)
+
+def append(environment, *args):
+    r = []
+    for arg in args:
+        r += arg
+    return r
+
+def not_scheme(environment, *args):
+    try: (b,) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'not' takes at exactly 1 argument")
+    return (not b)
+
+def LOAD(environment, *args):
+    try: (fname,) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'load' takes at exactly 1 argument")
+
+    with open(fname, "r") as f:
+        content = f.read()
+
+
+    parser = Parser()
+    parsed = parser.parse(content)
+    for exp in parsed:
+        val = eval_exp(exp, environment)
+
+
+def printf(environment, *args):
+    print(args)
+
+def errorf(environment, *args):
+    print(args)
+
+
 class Procedure(object):
 
     def __init__(self, parameters, body, environment):
@@ -123,40 +172,45 @@ class Procedure(object):
         self.environment = environment
 
     def __call__(self, environment, *args):
-        localenv = Environment.Environment(self.parameters, args, environment) #self.environment or environment ?
+        localenv = Environment.Environment(self.parameters, args, self.environment) #self.environment or environment ?
         return eval_exp(self.body, localenv)
+
+
 
 def get_default_env():
         "An environment with some Scheme standard procedures."
-        import math
+
         env = Environment.Environment()
-        env.update(vars(math)) # sin, cos, sqrt, pi, ...
+
+        env.update(MathLib.mathlib) # sin, cos, sqrt, pi, ...
         env.update({
         "define": define, "lambda": lambdaexp,
         "quote": quote, "set!": set,
-        '+':add, '-':sub, '*':mul, '/':div,
-        '>':gt, '<':lt, '>=':gte, '<=':lte, '=':eq,
-        'abs':     abs,
-        'append':  add,
-        #'apply':   apply,
-        'begin':   lambda *x: x[-1],
-        'car':     lambda x: x[0],
-        'cdr':     lambda x: x[1:],
-        'cons':    lambda x,y: [x] + y,
-        #'eq?':    eq but for identity,
-        'equal?':  eq,
-        'length':  len,
-        'list':    lambda *x: list(x),
-        'list?':   lambda x: isinstance(x,list),
-        'map':     map,
-        'max':     max,
-        'min':     min,
-        #'not':    notoperator,
-        'null?':   lambda x: x == [],
-        'number?': lambda x: isinstance(x, Number),
-        'procedure?': callable,
-        'round':   round,
-        'symbol?': lambda x: isinstance(x, Symbol),
-        "#t": True, "#f":False
+        '+': add, '-': sub, '*': mul, '/': div,
+        '>': gt, '<': lt, '>=': gte, '<=':lte, '=': equal,
+        'abs':     abs_scheme,
+        'append':  append,
+        'apply':   SchemeProcedureWrapper(apply),
+        'begin':   SchemeProcedureWrapper(lambda *x: x[-1]),
+        'car':     SchemeProcedureWrapper(lambda x: x[0]),
+        'cdr':     SchemeProcedureWrapper(lambda x: x[1:]),
+        'cons':    SchemeProcedureWrapper(lambda x,y: [x] + y),
+        'eq?':     eq_is,
+        'equal?':  equal,
+        'length':  SchemeProcedureWrapper(len),
+        'list':    SchemeProcedureWrapper(lambda *x: list(x)),
+        'list?':   SchemeProcedureWrapper(lambda x: isinstance(x,list)),
+        'map':     SchemeProcedureWrapper(map),
+        'max':     SchemeProcedureWrapper(max),
+        'min':     SchemeProcedureWrapper(min),
+        'not':     not_scheme,
+        'zero?':   SchemeProcedureWrapper(lambda x: x==0),
+        'null?':   SchemeProcedureWrapper(lambda x: x == []),
+        'number?': SchemeProcedureWrapper(lambda x: isinstance(x, Number)),
+        'procedure?': SchemeProcedureWrapper(callable),
+        'round':   SchemeProcedureWrapper(round),
+        'symbol?': SchemeProcedureWrapper(lambda x: isinstance(x, Symbol)),
+        "#t": True, "#f": False, "load": LOAD, "printf": printf, "errorf": errorf,
+        "member": NOT_IMPLEMENTED, "list-head": NOT_IMPLEMENTED, "list-tail": NOT_IMPLEMENTED
         })
         return env

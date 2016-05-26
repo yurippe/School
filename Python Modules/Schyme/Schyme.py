@@ -28,18 +28,23 @@ def schemestr(exp):
 
 class Schyme(object):
 
-    def __init__(self, environment=StandardLib.get_default_env()):
+    def __init__(self, environment=StandardLib.get_default_env(), toSchemestr=False):
         self.environment = environment
         self.parser = Parser()
+        self.toSchemestr = toSchemestr
 
     def eval(self, inp):
         parsed = self.parser.parse(inp)
         val = None
         for exp in parsed:
             val = eval_exp(exp, self.environment)
-        if val == None:
+
+        if self.toSchemestr:
+            if val == None:
+                return val
+            return schemestr(val)
+        else:
             return val
-        return schemestr(val)
     
 if __name__ == "__main__":
 
