@@ -28,6 +28,15 @@ def lambdaexp(environment, *args):
 
     return Procedure(parameters, body, environment)
 
+def let(environment, *args):
+    try: (parameters, body) = args
+    except: raise SyntaxError("Invalid argument count 'let' takes exactly 2 arguments")
+    newenv = Environment.Environment(outer=environment)
+    for param in parameters:
+        newenv[param[0]] = eval_exp(param[1], environment)
+
+    return eval_exp(body, newenv)
+
 
 def quote(environment, *args):
     (expression,) = args
@@ -156,6 +165,40 @@ def LOAD(environment, *args):
     for exp in parsed:
         val = eval_exp(exp, environment)
 
+def member(environment, *args):
+    try: (searchfor, searchin) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'member' takes at exactly 2 arguments")
+
+    i = 0
+    while i < len(searchin):
+        if searchin[i] == searchfor:
+            return searchin[i:]
+        i += 1
+    return False
+def memq(environment, *args):
+    try: (searchfor, searchin) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'memq' takes at exactly 2 arguments")
+
+    i = 0
+    while i < len(searchin):
+        if searchin[i] is searchfor:
+            return searchin[i:]
+        i += 1
+    return False
+
+def list_head(environment, *args):
+    try: (listin, index) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'list-head' takes at exactly 2 arguments")
+    if index > len(listin): raise SyntaxError("Index " + str(index) + " is out of range for list: " + str(listin))
+    if index < 0: raise SyntaxError("Invalid index: " + str(index))
+    return listin[:index]
+
+def list_tail(environment, *args):
+    try: (listin, index) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'list-tail' takes at exactly 2 arguments")
+    if index > len(listin): raise SyntaxError("Index " + str(index) + " is out of range for list: " + str(listin))
+    if index < 0: raise SyntaxError("Invalid index: " + str(index))
+    return listin[index:]
 
 def printf(environment, *args):
     print(args)
@@ -211,6 +254,7 @@ def get_default_env():
         'round':   SchemeProcedureWrapper(round),
         'symbol?': SchemeProcedureWrapper(lambda x: isinstance(x, Symbol)),
         "#t": True, "#f": False, "load": LOAD, "printf": printf, "errorf": errorf,
-        "member": NOT_IMPLEMENTED, "list-head": NOT_IMPLEMENTED, "list-tail": NOT_IMPLEMENTED
+        "member": member, "memq": memq, "list-head": list_head, "list-tail": list_tail,
+        "let": let, "letrec": NOT_IMPLEMENTED, "let*": NOT_IMPLEMENTED
         })
         return env

@@ -27,6 +27,8 @@ def evalArg(procedureName, index):
         return False
     if procedureName == "quote":
         return False
+    if procedureName == "let":
+        return False
     return True
 
 
