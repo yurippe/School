@@ -42,6 +42,24 @@ def quote(environment, *args):
     (expression,) = args
     return expression
 
+def cons(environment, *args): #TODO represent lists more like we do in scheme, this requires rework
+    #SchemeProcedureWrapper(lambda x,y: [x] + y)
+    try: (xs, ys) = args
+    except: raise SyntaxError("Invalid argument count 'cons' takes exactly 2 arguments")
+
+    #Still not right for all cases
+    try: return [xs] + ys
+    except TypeError:
+        try:
+            (left, right) = ys
+            try:
+                return ([xs] + left, right)
+            except TypeError:
+                return ([xs] + [left], right)
+        except TypeError:
+            return (xs, ys)
+
+
 def set(environment, *args):
     try: (var, exp) = args
     except: raise SyntaxError("Invalid argument count 'set!' takes exactly 2 arguments")
@@ -225,7 +243,7 @@ def get_default_env():
 
         env = Environment.Environment()
 
-        env.update(MathLib.mathlib) # sin, cos, sqrt, pi, ...
+        env.update(MathLib.mathlib)  # sin, cos, sqrt, pi, ...
         env.update({
         "define": define, "lambda": lambdaexp,
         "quote": quote, "set!": set,
@@ -237,7 +255,7 @@ def get_default_env():
         'begin':   SchemeProcedureWrapper(lambda *x: x[-1]),
         'car':     SchemeProcedureWrapper(lambda x: x[0]),
         'cdr':     SchemeProcedureWrapper(lambda x: x[1:]),
-        'cons':    SchemeProcedureWrapper(lambda x,y: [x] + y),
+        'cons':    cons,
         'eq?':     eq_is,
         'equal?':  equal,
         'length':  SchemeProcedureWrapper(len),

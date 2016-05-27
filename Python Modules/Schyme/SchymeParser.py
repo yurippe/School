@@ -41,6 +41,7 @@ class Parser(object):
         string = string.replace("[", " ( ")
         string = string.replace("]", " ) ")
         string = string.replace("'", " ' ")
+        if self.debug: print(string.split())
         return string.split()
 
     def _atomize(self, token):

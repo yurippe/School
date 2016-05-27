@@ -47,11 +47,4 @@ class Schyme(object):
             return val
     
 if __name__ == "__main__":
-
     repl()
-
-    with open("test.scm", "r") as f:
-        content = f.read()
-
-    parser = Parser()
-    print(parser.parse(content))
