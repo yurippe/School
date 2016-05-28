@@ -88,3 +88,7 @@ class SchemePair(object):
 
         else:
             raise SyntaxError("List: " + str(self) + " is not a proper list")
+
+class SchemeNull(object):
+    def __call__(self):
+        return []

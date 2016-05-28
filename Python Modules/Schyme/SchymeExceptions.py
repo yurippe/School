@@ -6,3 +6,6 @@ class ParserError(Exception):
 
 class NotImplementedError(Exception):
     pass
+
+class SchemeErrorf(Exception):
+    pass

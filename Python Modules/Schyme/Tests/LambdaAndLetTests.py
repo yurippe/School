@@ -20,6 +20,7 @@ interpreter.eval("(define proper-list-of-given-length? (lambda (v n) (or (and (n
 assert interpreter.eval("(is-definition? (cons 'define (cons #t #t)))") == False
 assert interpreter.eval("(is-definition? (cons 'define (cons #t (cons #t '()))))") == True
 
+assert interpreter.eval("(define x (lambda (x) (+ x 100))) (x 11)") == 111
 
 
 print "Passed Lambda and Let, Let* and Letrec Tests"

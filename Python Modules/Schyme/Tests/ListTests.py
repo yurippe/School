@@ -70,4 +70,6 @@ assert interpreter.eval("(null? '())") == True
 assert interpreter.eval("(null? '(1 2 3))") == False
 
 assert interpreter.eval("(append '(1 2) '(3 4))") == [1,2,3,4]
+assert interpreter.eval("(append '(1 2) '())") == [1,2]
+assert interpreter.eval("(append '() '(3 4))") == [3,4]
 print "Passed List Tests"

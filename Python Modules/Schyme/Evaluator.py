@@ -7,6 +7,7 @@ def getArgs(procedure, arguments, env):
             if nextIsLiteral:
                 if isinstance(arg, list):
                     arg = SchemePair.fromPythonList(arg)
+
                 args.append(arg)
                 nextIsLiteral = False
                 i += 1
@@ -32,6 +33,10 @@ def evalArg(procedureName, index):
         return False
     if procedureName == "let":
         return False
+    if procedureName == "letrec":
+        return False
+    if procedureName == "let*":
+        return False
     if procedureName == "and":
         return False
     if procedureName == "or":
@@ -42,6 +47,8 @@ def evalArg(procedureName, index):
 def eval_exp(x, env, literal=False):
     if isinstance(x, Symbol):      # variable reference
         return env.find(x)[x]
+    elif isinstance(x, SchemeNull):
+        return x()
     elif not isinstance(x, List):  # constant literal
         return x
     elif x == []: #dunno if this will fuck me in the ass later

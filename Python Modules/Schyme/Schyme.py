@@ -8,9 +8,10 @@ if sys.version_info[0] < 3:
     input = raw_input
 
 
-def repl(prompt='Schyme> ', ctoSchemestr=True):
+def repl(prompt='Schyme> ', ctoSchemestr=True, interpreter=None):
 
-    interpreter = Schyme(toSchemestr=False)
+    if interpreter == None:
+        interpreter = Schyme(toSchemestr=False)
     while True:
         inp = input(prompt)
         out = interpreter.eval(inp)
@@ -69,6 +70,12 @@ class Schyme(object):
             return schemestr(val)
         else:
             return val
-    
+
+    def evalFile(self, filename):
+        with open(filename, "r") as f:
+            content = f.read()
+        self.eval(content)
+
+
 if __name__ == "__main__":
     repl()

@@ -42,6 +42,25 @@ def let(environment, *args):
         newenv[param[0]] = eval_exp(param[1], environment)
     return eval_exp(body, newenv)
 
+def letrec(environment, *args): #NOT WORKING, read more: https://docs.racket-lang.org/reference/let.html
+    try: (parameters, body) = args
+    except: raise SyntaxError("Invalid argument count 'let' takes exactly 2 arguments")
+
+    newenv = Environment.Environment(outer=environment)
+    uniqueness = []
+    for param in parameters:
+        if param[0] in uniqueness:
+            raise SyntaxError("Duplicate paramater in 'let'")
+        else:
+            uniqueness.append(param[0])
+
+        newenv[param[0]] = None
+
+    for param in parameters:
+        print "evaling" + str(param[0])
+        newenv[param[0]] = eval_exp(param[1], newenv)
+
+    return eval_exp(body, newenv)
 
 def quote(environment, *args):
     (expression,) = args
@@ -155,7 +174,9 @@ def abs_scheme(environment, *args):
 def append(environment, *args):
     r = []
     for arg in args:
-        r += arg.toPythonList()
+        if isinstance(arg, SchemePair):
+            arg = arg.toPythonList()
+        r += arg
     return SchemePair.fromPythonList(r)
 
 def not_scheme(environment, *args):
@@ -203,20 +224,20 @@ def list_head(environment, *args):
     except IndexError: raise SyntaxError("Invalid argument count 'list-head' takes at exactly 2 arguments")
     if index > len(listin): raise SyntaxError("Index " + str(index) + " is out of range for list: " + str(listin))
     if index < 0: raise SyntaxError("Invalid index: " + str(index))
-    return listin[:index]
+    return SchemePair.fromPythonList(listin[:index])
 
 def list_tail(environment, *args):
     try: (listin, index) = args
     except IndexError: raise SyntaxError("Invalid argument count 'list-tail' takes at exactly 2 arguments")
     if index > len(listin): raise SyntaxError("Index " + str(index) + " is out of range for list: " + str(listin))
     if index < 0: raise SyntaxError("Invalid index: " + str(index))
-    return listin[index:]
+    return SchemePair.fromPythonList(listin[index:])
 
 def printf(environment, *args):
     print(args)
 
 def errorf(environment, *args):
-    print(args)
+    raise SchemeErrorf(" ; ".join([str(arg) for arg in args]))
 
 def and_scheme(environment, *args):
     for arg in args:
@@ -239,6 +260,14 @@ def if_scheme(environment, *args):
     else:
         return eval_exp(alt, environment)
 
+def integer_questionmark(environment, *args):
+    try: (i, ) = args
+    except IndexError: raise SyntaxError("Invalid argument count 'integer?' takes at exactly 1 arguments")
+    try:
+        c = int(i)
+        return True
+    except ValueError: return False
+
 class Procedure(object):
 
     def __init__(self, parameters, body, environment):
@@ -247,7 +276,7 @@ class Procedure(object):
         self.environment = environment
 
     def __call__(self, environment, *args):
-        localenv = Environment.Environment(self.parameters, args, self.environment) #self.environment or environment ?
+        localenv = Environment.Environment(self.parameters, args, self.environment)
         return eval_exp(self.body, localenv)
 
 
@@ -274,7 +303,7 @@ def get_default_env():
         'equal?':  equal,
         'pair?':   SchemeProcedureWrapper(lambda x: isinstance(x, SchemePair)),
         'length':  SchemeProcedureWrapper(len),
-        'list':    SchemeProcedureWrapper(lambda *x: list(x)),
+        'list':    SchemeProcedureWrapper(lambda *x: SchemePair.fromPythonList(list(x))),
         'list?':   SchemeProcedureWrapper(lambda x: isinstance(x,list)),
         'map':     SchemeProcedureWrapper(map),
         'max':     SchemeProcedureWrapper(max),
@@ -283,12 +312,14 @@ def get_default_env():
         'zero?':   SchemeProcedureWrapper(lambda x: x==0),
         'null?':   SchemeProcedureWrapper(lambda x: x == []),
         'number?': SchemeProcedureWrapper(lambda x: isinstance(x, Number)),
+        'integer?': integer_questionmark,
+        'negative?': SchemeProcedureWrapper(lambda x: x < 0),
         'procedure?': SchemeProcedureWrapper(callable),
         'round':   SchemeProcedureWrapper(round),
         'symbol?': SchemeProcedureWrapper(lambda x: isinstance(x, Symbol)),
         "#t": True, "#f": False, "load": LOAD, "printf": printf, "errorf": errorf,
         "member": member, "memq": memq, "list-head": list_head, "list-tail": list_tail,
-        "let": let, "letrec": NOT_IMPLEMENTED, "let*": NOT_IMPLEMENTED,
+        "let": let, "letrec": letrec, "let*": NOT_IMPLEMENTED,
         "and": and_scheme, "or": or_scheme, "if": if_scheme,
         "1-": SchemeProcedureWrapper(lambda x: x - 1), "1+": SchemeProcedureWrapper(lambda x: x + 1)
         })
