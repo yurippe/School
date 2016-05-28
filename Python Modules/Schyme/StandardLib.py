@@ -155,8 +155,8 @@ def abs_scheme(environment, *args):
 def append(environment, *args):
     r = []
     for arg in args:
-        r += arg
-    return r
+        r += arg.toPythonList()
+    return SchemePair.fromPythonList(r)
 
 def not_scheme(environment, *args):
     try: (b,) = args

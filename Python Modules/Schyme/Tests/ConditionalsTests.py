@@ -23,7 +23,7 @@ assert interpreter.eval("(test-if 2 5)") == 7
 assert interpreter.eval("(test-if 5 5)") == 25
 assert interpreter.eval("(test-if 5 2)") == 7
 
-assert interpreter.eval("(literal-test '())").toPythonList() == [1,3,3,7]
-assert interpreter.eval("(literal-test '(1 3 3 7))").toPythonList() == []
+assert interpreter.eval("(literal-test '())") == [1,3,3,7]
+assert interpreter.eval("(literal-test '(1 3 3 7))") == []
 
 print("Passed Conditionals Tests")

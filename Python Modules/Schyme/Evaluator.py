@@ -20,6 +20,7 @@ def getArgs(procedure, arguments, env):
             else:
                 args.append(arg) #is a literal ?
             i += 1
+    #print(str(arguments[0]) + str(args))
     return args
 
 def evalArg(procedureName, index):
@@ -38,11 +39,13 @@ def evalArg(procedureName, index):
     return True
 
 
-def eval_exp(x, env):
+def eval_exp(x, env, literal=False):
     if isinstance(x, Symbol):      # variable reference
         return env.find(x)[x]
     elif not isinstance(x, List):  # constant literal
         return x
+    elif x == []: #dunno if this will fuck me in the ass later
+        return []
     else:                          # (procedure arg...)
         procedure = eval_exp(x[0], env)
         args = getArgs(procedure, x, env)
