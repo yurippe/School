@@ -3,21 +3,35 @@ from Types import *
 import StandardLib
 from Evaluator import eval_exp
 
+import sys
+if sys.version_info[0] < 3:
+    input = raw_input
 
 
+def repl(prompt='Schyme> ', ctoSchemestr=True):
 
-
-def repl(prompt='Schyme> '):
-    parser = Parser()
-    env = StandardLib.get_default_env()
+    interpreter = Schyme(toSchemestr=False)
     while True:
-        inp = raw_input(prompt)
-        parsedinp = parser.parse(inp)
-        for exp in parsedinp:
-            val = eval_exp(exp, env)
-            if val is not None:
-                output = schemestr(val)
-                print(output)
+        inp = input(prompt)
+        out = interpreter.eval(inp)
+        if ctoSchemestr:
+            if out == None:
+                continue
+            print(schemestr(out))
+        else:
+            print(out)
+
+
+    # parser = Parser()
+    # env = StandardLib.get_default_env()
+    # while True:
+    #     inp = raw_input(prompt)
+    #     parsedinp = parser.parse(inp)
+    #     for exp in parsedinp:
+    #         val = eval_exp(exp, env)
+    #         if val is not None:
+    #             output = schemestr(val)
+    #             print(output)
 
 def schemestr(exp):
     if isinstance(exp, list):
@@ -36,7 +50,17 @@ class Schyme(object):
     def eval(self, inp):
         parsed = self.parser.parse(inp)
         val = None
+        nextIsLiteral = False
         for exp in parsed:
+            if nextIsLiteral:
+                if isinstance(exp, list):
+                    return SchemePair.fromPythonList(exp)
+                else:
+                    return exp
+                nextIsLiteral = False
+            if exp == "'":
+                nextIsLiteral = True
+                continue
             val = eval_exp(exp, self.environment)
 
         if self.toSchemestr:

@@ -32,9 +32,14 @@ def let(environment, *args):
     try: (parameters, body) = args
     except: raise SyntaxError("Invalid argument count 'let' takes exactly 2 arguments")
     newenv = Environment.Environment(outer=environment)
+    uniqueness = []
     for param in parameters:
-        newenv[param[0]] = eval_exp(param[1], environment)
+        if param[0] in uniqueness:
+            raise SyntaxError("Duplicate paramater in 'let'")
+        else:
+            uniqueness.append(param[0])
 
+        newenv[param[0]] = eval_exp(param[1], environment)
     return eval_exp(body, newenv)
 
 
@@ -42,23 +47,11 @@ def quote(environment, *args):
     (expression,) = args
     return expression
 
-def cons(environment, *args): #TODO represent lists more like we do in scheme, this requires rework
-    #SchemeProcedureWrapper(lambda x,y: [x] + y)
+
+def cons(environment, *args):
     try: (xs, ys) = args
     except: raise SyntaxError("Invalid argument count 'cons' takes exactly 2 arguments")
-
-    #Still not right for all cases
-    try: return [xs] + ys
-    except TypeError:
-        try:
-            (left, right) = ys
-            try:
-                return ([xs] + left, right)
-            except TypeError:
-                return ([xs] + [left], right)
-        except TypeError:
-            return (xs, ys)
-
+    return SchemePair(xs,ys)
 
 def set(environment, *args):
     try: (var, exp) = args
@@ -186,17 +179,18 @@ def LOAD(environment, *args):
 def member(environment, *args):
     try: (searchfor, searchin) = args
     except IndexError: raise SyntaxError("Invalid argument count 'member' takes at exactly 2 arguments")
-
+    searchin = searchin.toPythonList()
     i = 0
     while i < len(searchin):
         if searchin[i] == searchfor:
             return searchin[i:]
         i += 1
     return False
+
 def memq(environment, *args):
     try: (searchfor, searchin) = args
     except IndexError: raise SyntaxError("Invalid argument count 'memq' takes at exactly 2 arguments")
-
+    searchin = searchin.toPythonList()
     i = 0
     while i < len(searchin):
         if searchin[i] is searchfor:
@@ -224,6 +218,26 @@ def printf(environment, *args):
 def errorf(environment, *args):
     print(args)
 
+def and_scheme(environment, *args):
+    for arg in args:
+        if eval_exp(arg, environment):
+            continue
+        else: return False
+    return True
+
+def or_scheme(environment, *args):
+    for arg in args:
+        if eval_exp(arg, environment):
+            return True
+    return False
+
+def if_scheme(environment, *args):
+    (test, conseq, alt) = args
+    result = eval_exp(test, environment)
+    if result:
+        return eval_exp(conseq, environment)
+    else:
+        return eval_exp(alt, environment)
 
 class Procedure(object):
 
@@ -253,11 +267,12 @@ def get_default_env():
         'append':  append,
         'apply':   SchemeProcedureWrapper(apply),
         'begin':   SchemeProcedureWrapper(lambda *x: x[-1]),
-        'car':     SchemeProcedureWrapper(lambda x: x[0]),
-        'cdr':     SchemeProcedureWrapper(lambda x: x[1:]),
+        'car':     SchemeProcedureWrapper(lambda x: x.car),
+        'cdr':     SchemeProcedureWrapper(lambda x: x.cdr),
         'cons':    cons,
         'eq?':     eq_is,
         'equal?':  equal,
+        'pair?':   SchemeProcedureWrapper(lambda x: isinstance(x, SchemePair)),
         'length':  SchemeProcedureWrapper(len),
         'list':    SchemeProcedureWrapper(lambda *x: list(x)),
         'list?':   SchemeProcedureWrapper(lambda x: isinstance(x,list)),
@@ -273,6 +288,8 @@ def get_default_env():
         'symbol?': SchemeProcedureWrapper(lambda x: isinstance(x, Symbol)),
         "#t": True, "#f": False, "load": LOAD, "printf": printf, "errorf": errorf,
         "member": member, "memq": memq, "list-head": list_head, "list-tail": list_tail,
-        "let": let, "letrec": NOT_IMPLEMENTED, "let*": NOT_IMPLEMENTED
+        "let": let, "letrec": NOT_IMPLEMENTED, "let*": NOT_IMPLEMENTED,
+        "and": and_scheme, "or": or_scheme, "if": if_scheme,
+        "1-": SchemeProcedureWrapper(lambda x: x - 1), "1+": SchemeProcedureWrapper(lambda x: x + 1)
         })
         return env

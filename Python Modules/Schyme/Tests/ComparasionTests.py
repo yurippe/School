@@ -1,5 +1,5 @@
 import sys
-sys.path.append("..")
+sys.path.append("../..")
 from Schyme import Schyme
 
 interpreter = Schyme(toSchemestr=False)
