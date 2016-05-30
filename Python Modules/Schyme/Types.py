@@ -55,6 +55,11 @@ class SchemePair(object):
         else:
             return False
 
+    def __str__(self):
+        if (self.isProperList()):
+            return "(" + str(" ".join(self.toPythonList())) + ")"
+        return "(" + str(self.car) + "." + str(self.cdr) + ")"
+
     @staticmethod
     def schemeNull():
         return []
