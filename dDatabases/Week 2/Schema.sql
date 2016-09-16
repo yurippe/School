@@ -74,7 +74,7 @@ CREATE TABLE `Handin`(
     `gid` INT,
     `proid` INT,
     `points` INT,
-    `file` VARCHAR(20),        #Should be a blob or a link in real application
+    `file` VARCHAR(128),        #Should be a blob or a link in real application
     FOREIGN KEY (`proid`) REFERENCES Projects(`proid`),
     FOREIGN KEY (`gid`) REFERENCES Groups(`gid`)
 );
