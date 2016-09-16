@@ -144,24 +144,24 @@ INSERT INTO Exams (cid, pointsreq, `date`) (SELECT cid, 1  as pointsreq, '2017-0
     Their ID, the course ID and the unique exam attempt along with a given grade is added to the table.
 */
 #Inserting a person at a time
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 0 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 10 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-21 as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2016-10-18' as `date`, 0 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2016-10-18' as `date`, 10 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2016-10-18' as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2016-10-18' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-21' as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
 
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'John Doe' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Lily Doe' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 02 as grade FROM People p, Courses c WHERE p.name = 'Mary Sue' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'John Doe' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Lily Doe' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 02 as grade FROM People p, Courses c WHERE p.name = 'Mary Sue' AND c.name = 'Concurrency');
 
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Database');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Database');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Database');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, '2017-01-07' as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Database');
 
 
 

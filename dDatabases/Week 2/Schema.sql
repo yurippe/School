@@ -74,7 +74,7 @@ CREATE TABLE `Teaches`(
 CREATE TABLE `Takes`(
     `pid` INT,
     `cid` INT,
-    `number` INT,
+    `date` DATE,
     `grade` INT,
     FOREIGN KEY (`pid`) REFERENCES People(`pid`),
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
