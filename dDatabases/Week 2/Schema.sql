@@ -94,12 +94,11 @@ CREATE TABLE `Grades`(    #verb
  
 
 CREATE TABLE `Handin`(
-    `cid` INT,
     `gid` INT,
-    `pronumber` INT,
+    `proid` INT,
     `points` INT,
     `file` VARCHAR(20),        #TODO: Make it a blob or a link
-    FOREIGN KEY (`cid`) REFERENCES Courses(`cid`),
+    FOREIGN KEY (`proid`) REFERENCES Projects(`proid`),
     FOREIGN KEY (`gid`) REFERENCES Groups(`gid`)
 );
 
