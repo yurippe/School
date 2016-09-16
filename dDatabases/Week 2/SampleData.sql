@@ -144,23 +144,11 @@ INSERT INTO Exams (cid, `number`, pointsreq, `date`) (SELECT cid, 2 as `number`,
     Their ID, the course ID and the unique exam attempt along with a given grade is added to the table.
 */
 #Inserting a person at a time
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 0 as grade FROM People p, Courses c WHERE pid = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 10 as grade FROM People p, Courses c WHERE pid = 'Adam B. Hansen' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 7 as grade FROM People p, Courses c WHERE pid = 'Francisco Gluver' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 12 as grade FROM People p, Courses c WHERE pid = 'Kristian Gausel' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 2 as `number`, 4 as grade FROM People p, Courses c WHERE pid = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
-
-#Inserting everyone in the course - Something like this would be used in a proper implementation when registereing people
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, NULL as grade FROM
-                                               (SELECT * FROM Groupmembers NATURAL JOIN                                                                        #Find all groupmembers in the eligible groups
-                                                    (SELECT * FROM (SELECT cid, gid FROM Groups g JOIN Courses c WHERE g.cid = c.cid AND c.name = 'Database') #Find all groups to the course
-                                                        NATURAL JOIN (SELECT cid, gid, SUM(points) FROM Groups NATURAL JOIN Handin GROUP BY cid, gid)          #Determine the sum of the points given
-                                                        WHERE points > (SELECT pointsreq FROM Exams e, Courses c WHERE e.cid = c.cid AND c.name = 'Database' AND `number` = 1) #Points enough?
-                                                        )));
-
-#Insert everyone in the last course
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 12 as grade FROM Groupmembers g, Courses c WHERE g.cid = c.cid AND c.name = 'Concurrency');
-
+INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 0 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 10 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 2 as `number`, 4 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
 
 
 
