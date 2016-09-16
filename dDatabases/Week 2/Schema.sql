@@ -55,7 +55,6 @@ CREATE TABLE `Projects`(
 
 CREATE TABLE `Exams`(
     `cid` INT,
-    `number` INT,
     `pointsreq` INT,
     `date` DATE,
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
