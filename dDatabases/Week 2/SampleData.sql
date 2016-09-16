@@ -114,14 +114,14 @@ INSERT INTO Grades (pid, cid, gid) (SELECT pid, cid, gid FROM People p, Groups g
 
 INSERT INTO Projects (cid, proname) (SELECT cid, 'Threading-Ahoy!' as proname FROM Courses c WHERE c.name = 'Concurrency'); #Create a new project, where we will along with this, create handins connected to the project.
 SET @projectid = @@IDENTITY;
-INSERT INTO Handin (gid, pronumber, points, `file`) (SELECT gid, @projectid as pronumber, 0 as points, 'main.pdf' as `file` FROM Groups g WHERE g.gname  = 'CG1');
-INSERT INTO Handin (gid, pronumber, points, `file`) (SELECT gid, @projectid as pronumber, 23 as points, 'final_handin.pdf' as `file` FROM Groups g WHERE g.gname = 'CG2');
-INSERT INTO Handin (gid, pronumber, points, `file`) (SELECT gid, @projectid as pronumber, 24 as points, 'main2.pdf' as `file` FROM Groups g WHERE g.gname = 'CG1');
+INSERT INTO Handin (cid, gid, pronumber, points, `file`) (SELECT cid, gid, @projectid as pronumber, 0 as points, 'main.pdf' as `file` FROM Groups g WHERE g.gname  = 'CG1');
+INSERT INTO Handin (cid, gid, pronumber, points, `file`) (SELECT cid, gid, @projectid as pronumber, 23 as points, 'final_handin.pdf' as `file` FROM Groups g WHERE g.gname = 'CG2');
+INSERT INTO Handin (cid, gid, pronumber, points, `file`) (SELECT cid, gid, @projectid as pronumber, 24 as points, 'main2.pdf' as `file` FROM Groups g WHERE g.gname = 'CG1');
 
 INSERT INTO Projects (cid, proname) (SELECT cid, 'Concurrency for Dummies' as proname FROM Courses c WHERE c.name = 'Concurrency');
 SET @projectid = @@IDENTITY;
-INSERT INTO Handin (gid, pronumber, points, `file`) (SELECT gid, @projectid as pronumber, 25 as points, 'dummmies_final.pdf' as `file` FROM Groups g WHERE g.gname = 'CG1');
-INSERT INTO Handin (gid, pronumber, points, `file`) (SELECT gid, @projectid as pronumber, 24 as points, 'abstractions_of_threading.pdf' as `file` FROM Groups g WHERE g.gname = 'CG2');
+INSERT INTO Handin (cid, gid, pronumber, points, `file`) (SELECT cid, gid, @projectid as pronumber, 25 as points, 'dummmies_final.pdf' as `file` FROM Groups g WHERE g.gname = 'CG1');
+INSERT INTO Handin (cid, gid, pronumber, points, `file`) (SELECT cid, gid, @projectid as pronumber, 24 as points, 'abstractions_of_threading.pdf' as `file` FROM Groups g WHERE g.gname = 'CG2');
 
 
 /*
