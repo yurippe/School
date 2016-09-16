@@ -8,7 +8,7 @@
 INSERT INTO People (name) VALUES ('Kristian Gausel');
 INSERT INTO People (name) VALUES ('Adam B. Hansen');
 INSERT INTO People (name) VALUES ('Francisco Gluver');
-INSERT INTO People (name) VALUES ('Steffan Sølvsten');
+INSERT INTO People (name) VALUES ('Steffan SÃ¸lvsten');
 /* Regular people */
 INSERT INTO People (name) VALUES ('John Doe');
 INSERT INTO People (name) VALUES ('Lily Doe');
@@ -41,7 +41,7 @@ SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Kristian Gausel');
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Adam B. Hansen');
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Francisco Gluver');
-INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan Sølvsten');
+INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan SÃ¸lvsten');
 
 
 INSERT INTO Groups (cid, gname) (SELECT cid, 'CG2' as gname FROM Courses WHERE name = 'Concurrency');      #Make group
@@ -64,7 +64,7 @@ INSERT INTO Groups (cid, gname) (SELECT cid, 'DG2' as gname  FROM Courses WHERE 
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Francisco Gluver');
-INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan Sølvsten');
+INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan SÃ¸lvsten');
 
 
 /* PERVASIVE COMPUTING */
@@ -86,7 +86,7 @@ INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People
 INSERT INTO Groups (cid, gname) (SELECT cid, 'PC4' as gname FROM Courses WHERE name = 'Pervasive Computing');        #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
-INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan Sølvsten');
+INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan SÃ¸lvsten');
 
 
 /*
@@ -131,10 +131,10 @@ INSERT INTO Handin (gid, proid, points, `file`) (SELECT gid, @projectid as proid
     We set a specified number of tries, points requirement and the date.
     We retrieve the individual CID by finding a course that corresponds to a specific name.
 */
-INSERT INTO Exams (cid, `number`, pointsreq, `date`) (SELECT cid, 1 as `number`, 70 as pointsreq, '2017-01-07' as `date` FROM Courses c WHERE c.name = 'Concurrency');
-INSERT INTO Exams (cid, `number`, pointsreq, `date`) (SELECT cid, 1 as `number`, 24 as pointsreq, '2016-10-21' as `date` FROM Courses c WHERE c.name = 'Database');
-INSERT INTO Exams (cid, `number`, pointsreq, `date`) (SELECT cid, 1 as `number`, 1  as pointsreq, '2016-10-18' as `date`  FROM Courses c WHERE c.name = 'Pervasive Computing');
-INSERT INTO Exams (cid, `number`, pointsreq, `date`) (SELECT cid, 2 as `number`, 1  as pointsreq, '2017-01-21' as `date` FROM Courses c WHERE c.name = 'Pervasive Computing');
+INSERT INTO Exams (cid,  pointsreq, `date`) (SELECT cid, 70 as pointsreq, '2017-01-07' as `date` FROM Courses c WHERE c.name = 'Concurrency');
+INSERT INTO Exams (cid, pointsreq, `date`) (SELECT cid, 24 as pointsreq, '2016-10-21' as `date` FROM Courses c WHERE c.name = 'Database');
+INSERT INTO Exams (cid, pointsreq, `date`) (SELECT cid, 1  as pointsreq, '2016-10-18' as `date`  FROM Courses c WHERE c.name = 'Pervasive Computing');
+INSERT INTO Exams (cid, pointsreq, `date`) (SELECT cid, 1  as pointsreq, '2017-01-21' as `date` FROM Courses c WHERE c.name = 'Pervasive Computing');
 
 
 /*
@@ -144,11 +144,36 @@ INSERT INTO Exams (cid, `number`, pointsreq, `date`) (SELECT cid, 2 as `number`,
     Their ID, the course ID and the unique exam attempt along with a given grade is added to the table.
 */
 #Inserting a person at a time
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 0 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 10 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 1 as `number`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Pervasive Computing');
-INSERT INTO Takes (pid, cid, `number`, grade) (SELECT pid, cid, 2 as `number`, 4 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 0 as grade FROM People p, Courses c WHERE p.name = 'Steffan SÃ¸lvsten' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 10 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2016-10-18 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Pervasive Computing');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-21 as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Steffan SÃ¸lvsten' AND c.name = 'Pervasive Computing');
+
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Steffan SÃ¸lvsten' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 10 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'John Doe' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Lily Doe' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 02 as grade FROM People p, Courses c WHERE p.name = 'Mary Sue' AND c.name = 'Concurrency');
+
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Steffan SÃ¸lvsten' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Database');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Database');
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
