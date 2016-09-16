@@ -35,7 +35,8 @@ INSERT INTO Courses (name) VALUES ('Pervasive Computing');
     We get group id by using @@IDENTITY and setting @currentgroup to that number.
 */
 /* CONCURRENCY */
-INSERT INTO Groups (cid, gname) (SELECT cid, 'CG1' as gname FROM Courses WHERE name = 'Concurrency');      #Make group
+
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'CG1' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Concurrency' AND p.name = 'Gary Sue');  #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Kristian Gausel');
@@ -43,8 +44,7 @@ INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Francisco Gluver');
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan Sølvsten');
 
-
-INSERT INTO Groups (cid, gname) (SELECT cid, 'CG2' as gname FROM Courses WHERE name = 'Concurrency');      #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'CG2' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Concurrency' AND p.name = 'Gary Sue');
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'John Doe');
@@ -53,14 +53,14 @@ INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People
 
 
 /* DATABASE */
-INSERT INTO Groups (cid, gname) (SELECT cid, 'DG1' as gname FROM Courses WHERE name = 'Database');         #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'DG1' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Database' AND p.name = 'Gary Sue');      #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Kristian Gausel');
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Adam B. Hansen');
 
 
-INSERT INTO Groups (cid, gname) (SELECT cid, 'DG2' as gname  FROM Courses WHERE name = 'Database');         #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'DG2' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Database' AND p.name = 'Mary Sue');      #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Francisco Gluver');
@@ -68,29 +68,29 @@ INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People
 
 
 /* PERVASIVE COMPUTING */
-INSERT INTO Groups (cid, gname) (SELECT cid, 'PC1' as gname FROM Courses WHERE name = 'Pervasive Computing');      #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'PC1' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Pervasive Computing' AND p.name = 'Mary Sue');      #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Kristian Gausel');
 
-INSERT INTO Groups (cid, gname) (SELECT cid, 'PC2' as gname FROM Courses WHERE name = 'Pervasive Computing');        #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'PC2' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Pervasive Computing' AND p.name = 'Mary Sue');      #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Adam B. Hansen');
 
-INSERT INTO Groups (cid, gname) (SELECT cid, 'PC3' as gname FROM Courses WHERE name = 'Pervasive Computing');        #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'PC3' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Pervasive Computing' AND p.name = 'Mary Sue');      #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Francisco Gluver');
 
-INSERT INTO Groups (cid, gname) (SELECT cid, 'PC4' as gname FROM Courses WHERE name = 'Pervasive Computing');        #Make group
+INSERT INTO Groups (cid, gname, `supid`) (SELECT c.cid, 'PC4' as gname, p.pid as `supid` FROM Courses c, People p WHERE c.name = 'Pervasive Computing' AND p.name = 'Mary Sue');      #Make group
 SET @currentgroup = @@IDENTITY;           #Store Primary Key value from recently inserted group
 #Insert some people into the newly created group:
 INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People WHERE name = 'Steffan Sølvsten');
 
 
 /*
-    TEACHES     SUPERVISORS     TEACHES     SUPERVISORS     TEACHES
+    TEACHES     TEACHES     TEACHES     TEACHES     TEACHES
     
     Teachers and Supervisors (TA's) are inserted into their respective table and given their respective values for each attribute.
 */
@@ -98,14 +98,6 @@ INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p
 INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Niels Olof Bouvin' AND c.name = 'Pervasive Computing');
 INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Ira Assent' AND c.name = 'Database');
 INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Ira Assent' AND c.name = 'Concurrency');
-
-#Assign a TA to all groups in Concurrency
-INSERT INTO Grades (pid, cid, gid) (SELECT pid, cid, gid FROM People p, Courses c NATURAL JOIN Groups g WHERE p.name = 'Gary Sue' AND c.name = 'Concurrency');
-#TODO: Rename groups for DA1 and DA4, such that two groups can be chosen on prefix and assigned
-INSERT INTO Grades (pid, cid, gid) (SELECT pid, cid, gid FROM People p, Courses c NATURAL JOIN Groups g WHERE p.name = 'Mary Sue' AND c.name = 'Pervasive Computing');
-#Assign a TA to a specific group
-INSERT INTO Grades (pid, cid, gid) (SELECT pid, cid, gid FROM People p, Groups g WHERE p.name = 'Gary Sue' AND g.gname = 'DG1');
-INSERT INTO Grades (pid, cid, gid) (SELECT pid, cid, gid FROM People p, Groups g WHERE p.name = 'Mary Sue' AND g.gname = 'DG2');
 
 /*
     PROJECTS    HANDINS    PROJECTS    HANDINS    PROJECTS
