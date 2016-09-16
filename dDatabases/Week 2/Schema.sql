@@ -18,19 +18,15 @@ CREATE TABLE `People`(
     `name` VARCHAR(128)
 );
 
-
-
-
 CREATE TABLE `Courses`(
     `cid` INT PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(128)
 );
 
-
 CREATE TABLE `Groups`(
     `gid` INT PRIMARY KEY AUTO_INCREMENT,
     `gname` VARCHAR(16) UNIQUE,
-    `cid` INT,
+    `cid` INT NOT NULL,
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
 );
 
@@ -41,17 +37,13 @@ CREATE TABLE `Groupmembers`(
     FOREIGN KEY (`pid`) REFERENCES People(`pid`)
 );
 
-
-
 CREATE TABLE `Projects`(
-    `cid` INT,
+    `cid` INT NOT NULL,
     `proid` INT PRIMARY KEY AUTO_INCREMENT,
     `proname` VARCHAR(124),
     `mandatory` BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
 );
-
-
 
 CREATE TABLE `Exams`(
     `cid` INT,
@@ -60,16 +52,12 @@ CREATE TABLE `Exams`(
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
 );
 
-
-
 CREATE TABLE `Teaches`(
     `pid` INT,
     `cid` INT,
     FOREIGN KEY (`pid`) REFERENCES People(`pid`),
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
 );
-
-
 
 CREATE TABLE `Takes`(
     `pid` INT,
@@ -80,9 +68,7 @@ CREATE TABLE `Takes`(
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
 );
 
-
-
-CREATE TABLE `Grades`(    #verb
+CREATE TABLE `Grades`(    #the verb, not the plural of a noun
     `pid` INT,
     `cid` INT,
     `gid` INT,
@@ -90,14 +76,12 @@ CREATE TABLE `Grades`(    #verb
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`),
     FOREIGN KEY (`gid`) REFERENCES Groups(`gid`)
 );
- 
 
 CREATE TABLE `Handin`(
     `gid` INT,
     `proid` INT,
     `points` INT,
-    `file` VARCHAR(20),        #TODO: Make it a blob or a link
+    `file` VARCHAR(20),        #Should be a blob or a link in real application
     FOREIGN KEY (`proid`) REFERENCES Projects(`proid`),
     FOREIGN KEY (`gid`) REFERENCES Groups(`gid`)
 );
-
