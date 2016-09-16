@@ -153,7 +153,7 @@ INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-21 as `dat
 INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Steffan Sølvsten' AND c.name = 'Concurrency');
 INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Adam B. Hansen' AND c.name = 'Concurrency');
 INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 7 as grade FROM People p, Courses c WHERE p.name = 'Francisco Gluver' AND c.name = 'Concurrency');
-INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 10 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Concurrency');
+INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'Kristian Gausel' AND c.name = 'Concurrency');
 INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 12 as grade FROM People p, Courses c WHERE p.name = 'John Doe' AND c.name = 'Concurrency');
 INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 4 as grade FROM People p, Courses c WHERE p.name = 'Lily Doe' AND c.name = 'Concurrency');
 INSERT INTO Takes (pid, cid, `date`, grade) (SELECT pid, cid, 2017-01-07 as `date`, 02 as grade FROM People p, Courses c WHERE p.name = 'Mary Sue' AND c.name = 'Concurrency');
