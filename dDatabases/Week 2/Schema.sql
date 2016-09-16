@@ -27,7 +27,9 @@ CREATE TABLE `Groups`(
     `gid` INT PRIMARY KEY AUTO_INCREMENT,
     `gname` VARCHAR(16) UNIQUE,
     `cid` INT NOT NULL,
-    FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
+    `supid` INT NOT NULL,
+    FOREIGN KEY (`cid`) REFERENCES Courses(`cid`),
+    FOREIGN KEY (`supid`) REFERENCES People(`pid`)
 );
 
 CREATE TABLE `Groupmembers`(
@@ -66,15 +68,6 @@ CREATE TABLE `Takes`(
     `grade` INT,
     FOREIGN KEY (`pid`) REFERENCES People(`pid`),
     FOREIGN KEY (`cid`) REFERENCES Courses(`cid`)
-);
-
-CREATE TABLE `Grades`(    #the verb, not the plural of a noun
-    `pid` INT,
-    `cid` INT,
-    `gid` INT,
-    FOREIGN KEY (`pid`) REFERENCES People(`pid`),
-    FOREIGN KEY (`cid`) REFERENCES Courses(`cid`),
-    FOREIGN KEY (`gid`) REFERENCES Groups(`gid`)
 );
 
 CREATE TABLE `Handin`(
