@@ -97,6 +97,7 @@ INSERT INTO Groupmembers(gid, pid) (SELECT @currentgroup as gid, pid FROM People
 INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Niels Olof Bouvin' AND c.name = 'Concurrency');
 INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Niels Olof Bouvin' AND c.name = 'Pervasive Computing');
 INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Ira Assent' AND c.name = 'Database');
+INSERT INTO Teaches (pid, cid) (SELECT pid, cid FROM People p, Courses c WHERE p.name = 'Ira Assent' AND c.name = 'Concurrency');
 
 #Assign a TA to all groups in Concurrency
 INSERT INTO Grades (pid, cid, gid) (SELECT pid, cid, gid FROM People p, Courses c NATURAL JOIN Groups g WHERE p.name = 'Gary Sue' AND c.name = 'Concurrency');
