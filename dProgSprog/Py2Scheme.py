@@ -50,7 +50,9 @@ class Compiler(object):
             self.push(node.s)
             return
         if isinstance(node, ast.Name):
-            self.push(node.id)
+            if node.id == "True": self.push("#t")
+            elif node.id == "False": self.push("#f")
+            else: self.push(node.id)
             return
 
         if isinstance(node, ast.Expr):
@@ -63,6 +65,10 @@ class Compiler(object):
 
         if isinstance(node, ast.BinOp):
             self.parse_binop(node)
+            return
+
+        if isinstance(node, ast.BoolOp):
+            self.parse_boolop(node)
             return
 
         if isinstance(node, ast.Return):
@@ -89,12 +95,41 @@ class Compiler(object):
             self.parse_for(node)
             return
 
+        if isinstance(node, ast.If):
+            self.parse_if(node)
+            return
+
+        if isinstance(node, ast.Compare):
+            self.parse_compare(node)
+            return
+
         print("---------Unknown type: " + str(node) + " in parse()---------")
 
     def parse_list(self, node):
         self.push("(", "list")
         for element in node.elts:
             self.parse(element)
+        self.push(")")
+
+    def parse_compare(self, node):
+        self.push("(", self.get_operator(node.ops[0])) #ops seems to always be of length 1
+        self.parse(node.comparators[0]) #limited to 1 thing on the rightside
+        self.parse(node.left)
+        self.push(")")
+
+    def parse_if(self, node):
+        #(if cond ontrue onfalse)
+        self.push("(", "if")
+        self.parse(node.test)
+        for element in node.body:
+            self.parse(element)
+        if len(node.orelse) < 1:
+            #no alternate is specified so R5RS says the result is unspecified,
+            #a.k.a we can choose, so it is false to mimic python with None
+            #type being falsey
+            self.push("#f")
+        else:
+            self.parse(node.orelse[0]) #Seems to always have only 1 element (?)
         self.push(")")
 
     def parse_for(self, node):
@@ -112,11 +147,27 @@ class Compiler(object):
         elif isinstance(node, ast.Sub): return "-"
         elif isinstance(node, ast.Mult): return "*"
         elif isinstance(node, ast.Div): return "/"
+        elif isinstance(node, ast.Mod): return "mod"
+        elif isinstance(node, ast.Or): return "or"
+        elif isinstance(node, ast.And): return "and"
+        elif isinstance(node, ast.Eq): return "="
+        elif isinstance(node, ast.LtE): return "<="
+        elif isinstance(node, ast.GtE): return ">="
+        elif isinstance(node, ast.Lt): return "<"
+        elif isinstance(node, ast.Gt): return ">"
+
+        print("-------- Unknown operator: " + str(node) + " ---------")
         
     def parse_binop(self, node):
         self.push("(", self.get_operator(node.op))
         self.parse(node.left)
         self.parse(node.right)
+        self.push(")")
+
+    def parse_boolop(self, node):
+        self.push("(", self.get_operator(node.op))
+        for element in node.values:
+            self.parse(element)
         self.push(")")
 
     def parse_expression(self, node):
@@ -225,11 +276,15 @@ def test(arg1, arg2):
     l = [1, 2, 3]
     y = 5
     for e in l:
-        y += e
+        if e % 2 == 0:
+            y += e
+        elif False or True:
+            y += 1000
     z = lambda x,y : x*y
-    return x + arg1 + arg2 + y + z(10,10)
+    return x % arg1 + arg2 + y + z(10,10)
 test(2,3)
     """
 
     tree = ast.parse(expr)
-    print(Compiler(tree).Compile())
+    comp = Compiler(tree)
+    print(comp.Compile())
