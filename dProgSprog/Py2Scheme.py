@@ -172,7 +172,6 @@ class Compiler(object):
 
     def parse_expression(self, node):
         self.parse(node.value)
-        #self.dedent()?
 
     def parse_lambda(self, node):
         self.push("(", "lambda")
@@ -281,7 +280,7 @@ def test(arg1, arg2):
         elif False or True:
             y += 1000
     z = lambda x,y : x*y
-    return x % arg1 + arg2 + y + z(10,10)
+    return x % arg1 + arg2 + y + z(z(10,10),10)
 test(2,3)
     """
 
