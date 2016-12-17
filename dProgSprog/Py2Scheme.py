@@ -1,5 +1,27 @@
 import ast
 
+### Known limits / bugs
+#####################################
+#1  All functions in python must use return, write return False
+#   if you don't have return values, if you don't do this, the last
+#   in your function will be the return value in scheme. This is because
+#   Scheme doesn't have a return keyword, but just returns what is on the
+#   last line.
+#####################################
+#2  No support for classes yet, because Scheme is a functional programming-
+#   language, and I feel like I am already cheating by using "set!" for
+#   certain assignments.
+#####################################
+#3  Returning "None" in python doesn't work, since scheme doesnt have
+#   a "void" / "null" value. Just return False instead, since what you
+#   probably want is a Falsey return value. (This issue is practically
+#   the same as #1 because python automatically returns None if you don't
+#   specify a return value)
+#####################################
+#4  Print is only supported at top level, simply because in Scheme it
+#   has to be wrapped in a (begin (display "text") ([...])) which is
+#   cumbersome, and simply not supported at this time.
+
 class Compiler(object):
 
     def __init__(self, tree):
@@ -242,11 +264,19 @@ class Compiler(object):
             self.parse(arg)
         self.push(")")
 
+    def parse_print(self, node):
+        if len(node.values) < 1:
+            return
+        self.push("(", "display")
+        self.parse(node.values[0]) #only 1 arg here please
+        self.push(")")
+
     def parse_module(self, node):
         #Top level accepts only:
         ##ast.Assign        - will be a define at top level; ex: (define x 10)
         ##ast.FunctionDef   - will be define; ex: (define foo (lambda (x) x))
         ##ast.Expr          - will be an expression; ex: (foo arg1 arg2)
+        ##ast.Print         - will be a call to display; ex: (display 10)
         for subnode in node.body:
             if isinstance(subnode, ast.Assign):
                 self.push("(", "define")
@@ -260,6 +290,10 @@ class Compiler(object):
                 continue
             if isinstance(subnode, ast.Expr):
                 self.parse_expression(subnode)
+                continue
+
+            if isinstance(subnode, ast.Print):
+                self.parse_print(subnode)
                 continue
 
             print("-------------Illegal toplevel type: " + str(subnode) + "-----")
@@ -281,8 +315,23 @@ def test(arg1, arg2):
             y += 1000
     z = lambda x,y : x*y
     return x % arg1 + arg2 + y + z(z(10,10),10)
-test(2,3)
+    
+print(test(2,3))
+#expected result: 3011
+
+def fact(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return fact(n-1) * n
+
+def dethunk(f, arg):
+    f(arg)
+
+print(dethunk(fact, 10))
+#expected result: 3628800
     """
+
 
     tree = ast.parse(expr)
     comp = Compiler(tree)
