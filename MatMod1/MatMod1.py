@@ -9,6 +9,10 @@ import IPython.display as display
 try:
     from table2ascii import table2ascii
 except:
+    print("----------WARNING----------")
+    print("WARNING: module table2ascii not found you can download it here:")
+    print("https://github.com/Snaipe/table2ascii")
+    print("---------------------------")
     def table2ascii(*args):
         raise NotImplemented("You need to download table2ascii from here: https://github.com/Snaipe/table2ascii")
 
@@ -26,6 +30,12 @@ from scipy.stats import f as sci_f       #F distribution
 
 x, y, z, a, b, lamda, theta, r = symbols("x y z a b lamda theta r")
 init_printing()
+
+class SETTINGS(object):
+    def __init__(self):
+        self.min_confidence = 0.05 #5%        
+        
+settings = SETTINGS()
 
 #So buggy it can almost be considered useless
 class PrintLatex(object):
@@ -253,7 +263,8 @@ unit_test()
 print("Successfully set up")
 print("For all methods called 'solve_x(param1=None, param2=None, ...)' you need to supply all but one parameter to solve for the None parameter")
 print("\n\n")
-print("Use 'fractile_diagram_table(data)' to generate the table on p.31 (data is a list of observations)")
+print("--- Fractile diagrams ---")
+print("\tUse 'fractile_diagram_table(data)' to generate the table on p.31 (data is a list of observations)")
 PrintLatex("$\Phi$")
 print("---Phi lookups: page 1 in ST ---")
 print("\t'phi(x)'")
