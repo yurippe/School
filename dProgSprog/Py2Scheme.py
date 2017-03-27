@@ -151,15 +151,25 @@ class Compiler(object):
         #(if cond ontrue onfalse)
         self.push("(", "if")
         self.parse(node.test)
-        for element in node.body:
-            self.parse(element)
+        if len(node.body) == 1:
+            self.parse(node.body[0])
+        else:
+            self.push("(", "begin")
+            for element in node.body:
+                self.parse(element)
+            self.push(")")
         if len(node.orelse) < 1:
             #no alternate is specified so R5RS says the result is unspecified,
             #a.k.a we can choose, so it is false to mimic python with None
             #type being falsey
             self.push("#f")
+        elif len(node.orelse) == 1:
+            self.parse(node.orelse[0])
         else:
-            self.parse(node.orelse[0]) #Seems to always have only 1 element (?)
+            self.push("(", "begin")
+            for element in node.orelse:
+                self.parse(element)
+            self.push(")")
         self.push(")")
 
     def parse_for(self, node):

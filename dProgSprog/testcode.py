@@ -29,8 +29,27 @@ def x():
     l = 0
     for i in range(5,15,5):
         print(i)
-        print("\n")
         l += i + 2
     print(l)
 x()
 #Should print 5 10 19
+
+def y():
+    if False: print("no")
+    elif False: print("I said NO!")
+    else:
+        print("this")
+        print("should")
+        print("work")
+y()
+#Should print this should work
+
+def z():
+    x = 1
+    y = 2
+    print(x)
+    print(y)
+    l = 20
+    print(l)
+z()
+#Should print 1 2 20
