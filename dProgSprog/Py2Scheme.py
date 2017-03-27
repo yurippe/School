@@ -22,6 +22,7 @@ import ast
 #   has to be wrapped in a (begin (display "text") ([...])) which is
 #   cumbersome, and simply not supported at this time.
 
+
 class Compiler(object):
 
     def __init__(self, tree):
@@ -29,6 +30,7 @@ class Compiler(object):
         self.stack = []
         self.level = 0
         self.scopes = {0:[]}
+
 
     def in_current_scope(self, var, minscope=0):
         if minscope > self.level: return False
@@ -69,8 +71,10 @@ class Compiler(object):
             self.push(node.n)
             return
         if isinstance(node, ast.Str):
-            self.push(node.s)
+            ##TODO: Escape the whole string, not just newlines
+            self.push("\"" + node.s.replace("\n", "\\n") + "\"")
             return
+        
         if isinstance(node, ast.Name):
             if node.id == "True": self.push("#t")
             elif node.id == "False": self.push("#f")
@@ -123,6 +127,10 @@ class Compiler(object):
 
         if isinstance(node, ast.Compare):
             self.parse_compare(node)
+            return
+
+        if isinstance(node, ast.Print):
+            self.parse_print(node)
             return
 
         print("---------Unknown type: " + str(node) + " in parse()---------")
@@ -214,6 +222,7 @@ class Compiler(object):
         for line in node.body:
             self.parse(line)
         self.push(")", ")")
+        self.close_scope()
 
     def parse_return(self, node):
         self.parse(node.value)
@@ -256,8 +265,29 @@ class Compiler(object):
             self.enter_scope()
             self.add_to_scope(node.targets[0].id) #hardcoded =(
 
+
+    def is_python_keyword(self, name):
+        if name == "range": return True
+        return False
+
+    
+    def parse_special_call(self, node):
+        if node.func.id == "range":
+            self.push("(", "list")
+            argss = [arg.n for arg in node.args]
+            for element in range(*argss):
+                self.push(element)
+            self.push(")")
+            
+        
     def parse_call(self, node):
         #no keyword args atm, only good ol' foo(1,2,3)
+        if hasattr(node.func, "id"): 
+            if self.is_python_keyword(node.func.id):
+                self.parse_special_call(node)
+                return
+                
+                
         self.push("(")
         self.parse(node.func)
         for arg in node.args:
@@ -303,36 +333,88 @@ class Compiler(object):
 
 if __name__ == "__main__":
 
-    expr = """
-x = 1
-def test(arg1, arg2):
-    l = [1, 2, 3]
-    y = 5
-    for e in l:
-        if e % 2 == 0:
-            y += e
-        elif False or True:
-            y += 1000
-    z = lambda x,y : x*y
-    return x % arg1 + arg2 + y + z(z(10,10),10)
-    
-print(test(2,3))
-#expected result: 3011
+    if True:
+        import argparse
+        import os
+        import sys
 
-def fact(n):
-    if n == 0 or n == 1:
-        return 1
-    else:
-        return fact(n-1) * n
+        if sys.version_info[0] == 2:
+            input = raw_input
+        
+        parser = argparse.ArgumentParser(description="Python to Scheme transpiler")
 
-def dethunk(f, arg):
-    f(arg)
+        parser.add_argument("-input", type=str, nargs="+", help="1 or more files to compile", required=True)
+        parser.add_argument("-out", type=str, nargs="+", help="an output file for each input file", required=True)
 
-print(dethunk(fact, 10))
-#expected result: 3628800
-    """
+        args = parser.parse_args()
 
+        if(len(args.input) != len(args.out)):
+            print("You need to supply exactly one output path for each input file")
+            sys.exit(1)
+            
+        for i in range(len(args.input)):
+            try:
+                if os.path.isfile(args.out[i]):
+                    yn = input("File '" + args.out[i] + "' already exists, overwrite? (Y/N)")
+                    if yn.lower() != "y" and yn.lower() != "yes":
+                        print("Skipping file '" + args.input[i] + "'")
+                        continue
+                    
+                with open(args.input[i], "r") as f:
+                    content = f.read()
 
-    tree = ast.parse(expr)
-    comp = Compiler(tree)
-    print(comp.Compile())
+                c = Compiler(ast.parse(content))
+                compiledcontent = c.Compile()
+                    
+                with open(args.out[i], "w") as f:
+                    f.write(compiledcontent)
+                print("Successfully compiled file '" + args.input[i] + "'")
+            except Exception as e:
+                print("Error while processing file '" + args.input[i] + "':")
+                print(e.message)
+                print("----\nFile skipped '" + args.input[i] + "'")
+                
+##
+##    expr = """
+##x = 1
+##def test(arg1, arg2):
+##    l = [1, 2, 3]
+##    y = 5
+##    for e in l:
+##        if e % 2 == 0:
+##            y += e
+##        elif False or True:
+##            y += 1000
+##    z = lambda x,y : x*y
+##    return x % arg1 + arg2 + y + z(z(10,10),10)
+##    
+##print(test(2,3))
+###expected result: 3011
+##
+##def fact(n):
+##    if n == 0 or n == 1:
+##        return 1
+##    else:
+##        return fact(n-1) * n
+##
+##def dethunk(f, arg):
+##    return f(arg)
+##
+##print(dethunk(fact, 10))
+###expected result: 3628800
+##
+##def x():
+##    l = 0
+##    for i in range(5,15,5):
+##        print(i)
+##        print("\n")
+##        l += i + 2
+##    print(l)
+##x()
+###Should print 5 10 19
+##    """
+##
+##
+##    tree = ast.parse(expr)
+##    comp = Compiler(tree)
+##    print(comp.Compile())
